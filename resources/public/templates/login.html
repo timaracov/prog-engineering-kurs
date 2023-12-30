@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title></title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body style="background-color: #d7d6dd">
+		<style>
+			* {
+				margin: 0 auto;
+				font-family: Monospace;
+			}
+
+			.login__card {
+				padding: 10px;
+				border: 2px solid "#999";
+				border-radius: 5px;
+				background-color: white;
+				width: 200px;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				margin-left: -100px;
+  				margin-top: -100px;
+			}
+			#h {
+				margin: 20px 0;
+				text-align: center;
+			}
+
+			#inp {
+				padding: 5px;
+				width: 187px;
+				margin: 10px 0;
+			}
+
+			.login_b {
+				background-color: #5555ee;
+				border: none;
+				border-radius: 5px;
+				padding: 5px;
+				width: 200px;
+				color: white;
+			}
+			.login_b:hover {
+				background-color: #4444bb;
+				cursor: pointer;
+			}
+		</style>
+
+		<div class="login__card">
+			<h1 id="h" >Welcome</h1>	
+			<input id="inp" type="text" name="username">
+			<input id="inp" type="password" name="password">
+			<input class="login_b" type="button" name="login" value="Log in" onclick={console.log("aha")}>
+		</div>
+	</body>
+</html>
