@@ -72,9 +72,31 @@
 				cursor: pointer;
 			}
 
-			.central_ui {
-				width: 600px;
+			.root {
 				margin-top: 50px;
+				/*background-color: #99b900;*/
+				width: 1200px;
+			}
+			.central_ui {
+				width: 800px;
+				/*background-color: #9a076c;*/
+				float: left;
+			}
+			.create_els {
+				margin-top: 30px;
+				width: 300px;
+				float: right;
+				padding: 0 25px;
+			}
+			.create_els input {
+				width: 300px;
+				margin-bottom: 10px;
+				outline: none;
+			}
+			#crb {
+				width: 100%;
+				padding: 0;
+				margin: 0;
 			}
 
 			#slct {
@@ -125,50 +147,59 @@
 			}
 
 		</style>
-		<div class="central_ui">
-			<div class="tabs_row">
-				<div class="doc_bts">
-					<button>Documents</button>
-					<button>Authors</button>
-					<button>Departments</button>
+		<div class="root">
+			<div class="central_ui">
+				<div class="tabs_row">
+					<div class="doc_bts">
+						<button>Documents</button>
+						<button>Authors</button>
+						<button>Departments</button>
+					</div>
+					<div class="option_row">
+						<select id="slct">
+							<option value="По автору">По автору</option>
+							<option value="По отделу">По отделу</option>
+							<option value="По документу">По документу</option>
+						</select>
+						<button id="sb"><i class="fa fa-sort"></i></button>
+					</div>
 				</div>
-				<div class="option_row">
-					<select id="slct">
-						<option value="По автору">По автору</option>
-						<option value="По отделу">По отделу</option>
-						<option value="По документу">По документу</option>
-					</select>
-					<button id="sb"><i class="fa fa-sort"></i></button>
-				</div>
+				<table>
+					<tr class="header_tr">
+						<th>Id</th>
+						<th>Name</th>
+						<th>Addr</th>
+						<th class="crth">
+							<input id="cb" class="crud_c" type="button" name="create" value="+">
+						</th>
+					</tr>
+					<tr class="row_tr">
+						<th>abff-00ef-120a-338f</th>
+						<th>Bob</th>
+						<th>Zuzichsrase</th>
+						<th class="crth">
+							<input id="cb" class="crud_u" type="button" name="update" value="+">
+							<input id="cb" class="crud_d" type="button" name="delete" value="-">
+						</th>
+					</tr>
+					<tr class="row_tr">
+						<th>1920-ff0a-1293-bb12</th>
+						<th>Martin</th>
+						<th>Moscow</th>
+						<th class="crth">
+							<input id="cb" class="crud_u" type="button" name="update" value="+">
+							<input id="cb" class="crud_d" type="button" name="delete" value="-">
+						</th>
+					</tr>
+				</table>
 			</div>
-			<table>
-				<tr class="header_tr">
-					<th>Name</th>
-					<th>Id</th>
-					<th>Addr</th>
-					<th class="crth">
-						<input id="cb" class="crud_c" type="button" name="create" value="+">
-					</th>
-				</tr>
-				<tr class="row_tr">
-					<th>Bob</th>
-					<th>abff-00ef-120a-338f</th>
-					<th>Zuzichsrase</th>
-					<th class="crth">
-						<input id="cb" class="crud_u" type="button" name="update" value="+">
-						<input id="cb" class="crud_d" type="button" name="delete" value="-">
-					</th>
-				</tr>
-				<tr class="row_tr">
-					<th>Martin</th>
-					<th>1920-ff0a-1293-bb12</th>
-					<th>Moscow</th>
-					<th class="crth">
-						<input id="cb" class="crud_u" type="button" name="update" value="+">
-						<input id="cb" class="crud_d" type="button" name="delete" value="-">
-					</th>
-				</tr>
-			</table>
+			<div class="create_els">
+				<input type="text" name="name" placeholder="Name">
+				<input type="text" name="version" placeholder="Version">
+				<input type="text" name="folder" placeholder="Folder">
+				<input type="text" name="author" placeholder="Author">
+				<button id="crb" type="text">Create</button>
+			</div>
 		</div>
 	</body>
 </html>
