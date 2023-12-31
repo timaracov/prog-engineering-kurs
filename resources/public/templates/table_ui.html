@@ -12,23 +12,58 @@
 
 			.central_ui {
 				padding-top: 50px;
+				width: 600px;
+				background-color: #eee;
+			}
+			.option_row {
+				margin-top: 10px;
+				background-color: #888;
 			}
 
 			table {
 			  font-family: arial, sans-serif;
 			  border-collapse: collapse;
-			  width: 80%;
+			  width: 100%;
 			}
 
 			.header_tr {
 				font-weight: bold;
 			}
-
 			td, th {
 			  border: 1px solid #dddddd;
 			  text-align: left;
 			  padding: 8px;
 			}
+			#cb {
+				outline: none;
+				border: none;
+				border-radius: 5px;
+				color: white;
+				width: 20px;
+				font-weight: bold;
+			}
+			.crud_c {
+				background-color: #33aa44;
+			}
+			.crud_u {
+				background-color: #3355ff;
+			}
+			.crud_d {
+				background-color: #ff4444;
+			}
+			.crud_c:hover {
+				background-color: #229933;
+				cursor: pointer;
+			}
+			.crud_u:hover {
+				background-color: #2244ee;
+				cursor: pointer;
+			}
+			.crud_d:hover {
+				background-color: #ee3333;
+				cursor: pointer;
+			}
+
 		</style>
 		<div class="central_ui">
 			<table>
@@ -36,18 +71,37 @@
 					<th>Name</th>
 					<th>Id</th>
 					<th>Addr</th>
+					<th>
+						<input id="cb" class="crud_c" type="button" name="create" value="+">
+					</th>
 				</tr>
 				<tr class="row_tr">
 					<th>Bob</th>
 					<th>abff-00ef-120a-338f</th>
 					<th>Zuzichsrase</th>
+					<th>
+						<input id="cb" class="crud_u" type="button" name="update" value="+">
+						<input id="cb" class="crud_d" type="button" name="delete" value="-">
+					</th>
 				</tr>
 				<tr class="row_tr">
 					<th>Martin</th>
 					<th>1920-ff0a-1293-bb12</th>
 					<th>Moscow</th>
+					<th>
+						<input id="cb" class="crud_u" type="button" name="update" value="+">
+						<input id="cb" class="crud_d" type="button" name="delete" value="-">
+					</th>
 				</tr>
 			</table>
+			<p>Сортировка:</p>
+			<div class="option_row">
+				<select>
+					<option value="По автору">По автору</option>
+					<option value="По отделу">По отделу</option>
+					<option value="По документу">По документу</option>
+				</select>
+			</div>
 		</div>
 	</body>
 </html>
