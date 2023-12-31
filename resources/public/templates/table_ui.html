@@ -5,35 +5,43 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="css/style.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	</head>
 	<body>
 		<style>
-			* {margin: 0 auto;}
-
-			.central_ui {
-				padding-top: 50px;
-				width: 600px;
-				background-color: #eee;
-			}
-			.option_row {
-				margin-top: 10px;
-				background-color: #888;
+			* {
+				margin: 0 auto;
+				font-family: Monospace;
 			}
 
 			table {
-			  font-family: arial, sans-serif;
-			  border-collapse: collapse;
 			  width: 100%;
-			}
-
-			.header_tr {
-				font-weight: bold;
+			  border-collapse: separate;
+			  border-spacing: 0;
+			  overflow: hidden;
 			}
 			td, th {
 			  border: 1px solid #dddddd;
 			  text-align: left;
 			  padding: 8px;
 			}
+			tr:first-child th:first-child {
+			  border-top-left-radius: 5px;
+			}
+			tr:first-child th:last-child {
+			  border-top-right-radius: 5px;
+			}
+			tr:last-child th:first-child {
+			  border-bottom-left-radius: 5px;
+			}
+			tr:last-child th:last-child {
+			  border-bottom-right-radius: 5px;
+			}
+
+			.header_tr {
+				font-weight: bold;
+			}
+
 			#cb {
 				outline: none;
 				border: none;
@@ -64,14 +72,81 @@
 				cursor: pointer;
 			}
 
+			.central_ui {
+				width: 600px;
+				margin-top: 50px;
+			}
+
+			#slct {
+				border: 1px solid #bbb;
+				border-radius: 5px;
+				height: 20px;
+				background-color: white;
+			}
+			#slct:hover {
+				background-color: #eee;
+				cursor: pointer;
+			}
+			#sb {
+				border: 1px solid #bbb;
+				border-radius: 5px;
+				height: 20px;
+				background-color: white;
+			}
+			#sb:hover {
+				background-color: #eee;
+				cursor: pointer;
+			}
+			.crth {
+				width: 50px;
+			}
+
+			.option_row {
+				width: 150px;
+				margin-right: 0;
+			}
+			.tabs_row {
+				margin-bottom: 10px;
+				display: flex;
+				justify-content: space-between;
+			}
+			.tabs_row button {
+				border: 1px solid #bbb;
+				border-radius: 5px;
+				height: 20px;
+				background-color: white;
+			}
+			.doc_bts {
+				margin-left: 0;
+			}
+			.doc_bts button:hover {
+				background-color: #eee;
+				cursor: pointer;
+			}
+
 		</style>
 		<div class="central_ui">
+			<div class="tabs_row">
+				<div class="doc_bts">
+					<button>Documents</button>
+					<button>Authors</button>
+					<button>Departments</button>
+				</div>
+				<div class="option_row">
+					<select id="slct">
+						<option value="По автору">По автору</option>
+						<option value="По отделу">По отделу</option>
+						<option value="По документу">По документу</option>
+					</select>
+					<button id="sb"><i class="fa fa-sort"></i></button>
+				</div>
+			</div>
 			<table>
 				<tr class="header_tr">
 					<th>Name</th>
 					<th>Id</th>
 					<th>Addr</th>
-					<th>
+					<th class="crth">
 						<input id="cb" class="crud_c" type="button" name="create" value="+">
 					</th>
 				</tr>
@@ -79,7 +154,7 @@
 					<th>Bob</th>
 					<th>abff-00ef-120a-338f</th>
 					<th>Zuzichsrase</th>
-					<th>
+					<th class="crth">
 						<input id="cb" class="crud_u" type="button" name="update" value="+">
 						<input id="cb" class="crud_d" type="button" name="delete" value="-">
 					</th>
@@ -88,20 +163,12 @@
 					<th>Martin</th>
 					<th>1920-ff0a-1293-bb12</th>
 					<th>Moscow</th>
-					<th>
+					<th class="crth">
 						<input id="cb" class="crud_u" type="button" name="update" value="+">
 						<input id="cb" class="crud_d" type="button" name="delete" value="-">
 					</th>
 				</tr>
 			</table>
-			<p>Сортировка:</p>
-			<div class="option_row">
-				<select>
-					<option value="По автору">По автору</option>
-					<option value="По отделу">По отделу</option>
-					<option value="По документу">По документу</option>
-				</select>
-			</div>
 		</div>
 	</body>
 </html>
