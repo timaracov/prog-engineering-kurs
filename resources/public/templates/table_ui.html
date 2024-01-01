@@ -8,6 +8,65 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	</head>
 	<body>
+		<div class="root">
+			<div class="central_ui">
+				<div class="tabs_row">
+					<div class="doc_bts">
+						<button>Documents</button>
+						<button>Authors</button>
+						<button>Departments</button>
+					</div>
+					<div class="option_row">
+						<select id="slct">
+							<option value="5">5</option>
+							<option value="10">10</option>
+							<option value="25">25</option>
+						</select>
+						<select id="slct">
+							<option value="По автору">По автору</option>
+							<option value="По отделу">По отделу</option>
+							<option value="По документу">По документу</option>
+						</select>
+						<button id="sb"><i class="fa fa-sort"></i></button>
+					</div>
+				</div>
+				<table>
+					<tr class="header_tr">
+						<th>Id</th>
+						<th>Name</th>
+						<th>Addr</th>
+						<th class="crth">
+							<input id="cb" class="crud_c" type="button" name="create" value="+">
+						</th>
+					</tr>
+					<tr class="row_tr">
+						<th>abff-00ef-120a-338f</th>
+						<th>Bob</th>
+						<th>Zuzichsrase</th>
+						<th class="crth">
+							<input id="cb" class="crud_u" type="button" name="update" value="+">
+							<input id="cb" class="crud_d" type="button" name="delete" value="-">
+						</th>
+					</tr>
+					<tr class="row_tr">
+						<th>1920-ff0a-1293-bb12</th>
+						<th>Martin</th>
+						<th>Moscow</th>
+						<th class="crth">
+							<input id="cb" class="crud_u" type="button" name="update" value="+">
+							<input id="cb" class="crud_d" type="button" name="delete" value="-">
+						</th>
+					</tr>
+				</table>
+			</div>
+			<div class="create_els">
+				<input type="text" name="name" placeholder="Name">
+				<input type="text" name="version" placeholder="Version">
+				<input type="text" name="folder" placeholder="Folder">
+				<input type="text" name="author" placeholder="Author">
+				<button id="crb" type="text">Create</button>
+			</div>
+		</div>
 		<style>
 			* {
 				margin: 0 auto;
@@ -89,12 +148,12 @@
 				padding: 0 25px;
 			}
 			.create_els input {
-				width: 300px;
+				width: 100%;
 				margin-bottom: 10px;
 				outline: none;
 			}
 			#crb {
-				width: 100%;
+				width: 308px;
 				padding: 0;
 				margin: 0;
 			}
@@ -124,7 +183,7 @@
 			}
 
 			.option_row {
-				width: 150px;
+				width: 201px;
 				margin-right: 0;
 			}
 			.tabs_row {
@@ -145,61 +204,15 @@
 				background-color: #eee;
 				cursor: pointer;
 			}
-
 		</style>
-		<div class="root">
-			<div class="central_ui">
-				<div class="tabs_row">
-					<div class="doc_bts">
-						<button>Documents</button>
-						<button>Authors</button>
-						<button>Departments</button>
-					</div>
-					<div class="option_row">
-						<select id="slct">
-							<option value="По автору">По автору</option>
-							<option value="По отделу">По отделу</option>
-							<option value="По документу">По документу</option>
-						</select>
-						<button id="sb"><i class="fa fa-sort"></i></button>
-					</div>
-				</div>
-				<table>
-					<tr class="header_tr">
-						<th>Id</th>
-						<th>Name</th>
-						<th>Addr</th>
-						<th class="crth">
-							<input id="cb" class="crud_c" type="button" name="create" value="+">
-						</th>
-					</tr>
-					<tr class="row_tr">
-						<th>abff-00ef-120a-338f</th>
-						<th>Bob</th>
-						<th>Zuzichsrase</th>
-						<th class="crth">
-							<input id="cb" class="crud_u" type="button" name="update" value="+">
-							<input id="cb" class="crud_d" type="button" name="delete" value="-">
-						</th>
-					</tr>
-					<tr class="row_tr">
-						<th>1920-ff0a-1293-bb12</th>
-						<th>Martin</th>
-						<th>Moscow</th>
-						<th class="crth">
-							<input id="cb" class="crud_u" type="button" name="update" value="+">
-							<input id="cb" class="crud_d" type="button" name="delete" value="-">
-						</th>
-					</tr>
-				</table>
-			</div>
-			<div class="create_els">
-				<input type="text" name="name" placeholder="Name">
-				<input type="text" name="version" placeholder="Version">
-				<input type="text" name="folder" placeholder="Folder">
-				<input type="text" name="author" placeholder="Author">
-				<button id="crb" type="text">Create</button>
-			</div>
-		</div>
+		<script>
+			let doc_objcts = [
+				{"id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
+				{"id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
+			];
+			doc_objcts.forEach((o) => {
+				console.log(o);
+			})
+		</script>
 	</body>
 </html>
