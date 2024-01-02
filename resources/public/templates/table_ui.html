@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<head>
 		<title></title>
 		<meta charset="UTF-8">
@@ -11,9 +12,9 @@
 			<div class="central_ui">
 				<div class="tabs_row">
 					<div class="doc_bts">
-						<button>Documents</button>
-						<button>Authors</button>
-						<button>Departments</button>
+						<button onclick="changeDataSource(documents)">Documents</button>
+						<button onclick="changeDataSource(authors)">Authors</button>
+						<button onclick="changeDataSource(departments)">Departments</button>
 					</div>
 					<div class="option_row">
 						<select id="slct" onChange="setPaginationNum(this.value);">
@@ -30,44 +31,11 @@
 					</div>
 				</div>
 				<div class="pagination_block">
-					<!-- 
-					<button class="pag_ctrl_b" type="text"><</button>
-					<button class="pag_ctrl_b" type="text">></button>
-					-->
 					<button class="pag_num_b" type="text">1</button>
 					<button class="pag_num_b" type="text">2</button>
 					<button class="pag_num_b" type="text">3</button>
 				</div>
 				<table id="data__table">
-					<tr class="header_tr">
-						<th>Id</th>
-						<th>Name</th>
-						<th>Addr</th>
-						<th class="crth">
-							<input id="cb" class="crud_c" type="button" name="create" value="+">
-						</th>
-					</tr>
-					<!--
-					<tr class="row_tr">
-						<th>abff-00ef-120a-338f</th>
-						<th>Bob</th>
-						<th>Zuzichsrase</th>
-						<th class="crth">
-							<input id="cb" class="crud_u" type="button" name="update" value="+">
-							<input id="cb" class="crud_d" type="button" name="delete" value="-">
-						</th>
-					</tr>
-					<tr class="row_tr">
-						<th>1920-ff0a-1293-bb12</th>
-						<th>Martin</th>
-						<th>Moscow</th>
-						<th class="crth">
-							<input id="cb" class="crud_u" type="button" name="update" value="+">
-							<input id="cb" class="crud_d" type="button" name="delete" value="-">
-						</th>
-					</tr>
-					-->
-
 				</table>
 			</div>
 			<div class="create_els">
@@ -79,53 +47,74 @@
 			</div>
 		</div>
 		<script>
-			let doc_objcts = [
-				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
-				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
-				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
-				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
-				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
-				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
-				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
-				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
-				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
-				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
-				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
-				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
-				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
-				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
-				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
-				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
-				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
-				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
-				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
-				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
-				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
-				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
-				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
-				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
-				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
-				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
-				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
-				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
-			];
+			let documents = [
+				{
+					"id": "0",
+					"name": "ESPD.19.103.2",
+					"version": "0.0.1-beta",
+					"folder": "ftp://storage/root/files/espd/001.md", 
+					"created_at": 17283818283,
+					"author_id": "0"
+				}
+			]
 
+			let authors = [
+				{
+					"id": "0",
+					"fullname": "Michael D. Brown",
+					"education": "full high",
+					"university": "BFU",
+					"department_id": "0"
+				}
+			]
+
+			let departments = [
+				{
+					"id": "0",
+					"name": "development",
+					"head": "Jorsh Bash",
+					"phone": "+7-909-5151-90-42",
+				}
+			]
+
+			let displayListOfObjects = documents;
+			
 			let paginationPage = 0;
 			let paginationNum = 5;
+
+
+			function changeDataSource(name) {
+				displayListOfObjects = name;
+				paginationPage = 0;
+				resetTable(displayListOfObjects);
+				createTable(displayListOfObjects);
+				createPaginationRow(displayListOfObjects);
+			}
+
+			function fetchDocuments() {
+				axios.get("http://localhost:8080/api/documents")
+					.then(resp => console.log(resp.data))
+					.catch(err => console.log(err))
+			}
 
 			function setPaginationNum(num) {
 				paginationNum = num;
 				paginationPage = 0;
-				resetTable(doc_objcts);
-				createTable(doc_objcts);
-				createPaginationRow(doc_objcts);
+				resetTable(displayListOfObjects);
+				createTable(displayListOfObjects);
+				createPaginationRow(displayListOfObjects);
 			}
 
 			function setPaginationPage(pag_page) {
 				paginationPage = pag_page;
-				resetTable(doc_objcts);
-				createTable(doc_objcts);
-				createPaginationRow(doc_objcts);
+				resetTable(displayListOfObjects);
+				createTable(displayListOfObjects);
+				createPaginationRow(displayListOfObjects);
+			}
+
+			function redirectToLoginPage() {
+				// check if authorized
+				window.location.replace("./login.html");
 			}
 
 			function resetTable(list_of_objects) {
@@ -133,16 +122,6 @@
 				table_el.replaceChildren([]);
 				tr_row = document.createElement("tr");
 				tr_row.classList.add("header_tr");
-				for (var key in list_of_objects[0]) {
-					subth = document.createElement("th")
-					subth.innerHTML = key;
-					tr_row.appendChild(subth);
-				}
-				op_ui = document.createElement("th")
-				op_ui.classList.add("crth")
-				op_ui.innerHTML = '<input id="cb" class="crud_c" type="button" name="create" value="+">'
-				tr_row.appendChild(op_ui);
-
 				table_el.appendChild(tr_row);
 			}
 
@@ -168,8 +147,24 @@
 
 			function createTable(dict_list) {
 				table_el = document.getElementById("data__table");
+
+				tr_header = document.createElement("tr");
+				tr_header.classList.add("header_tr");
+				for (var key in dict_list[0]) {
+					th = document.createElement("th");
+					th.innerHTML = key;
+					tr_header.appendChild(th);
+				}
+				crth_header = document.createElement("th");
+				crth_header.classList.add("crth");
+				crth_header.innerHTML = '<input id="cb" class="crud_c" type="button" name="create" value="+">';
+
+				tr_header.appendChild(crth_header);
+				table_el.appendChild(tr_header);
+
 				const slice_from = Number(paginationPage)*Number(paginationNum);
 				const slice_to = slice_from + Number(paginationNum);
+
 				dict_list.slice(slice_from, slice_to).forEach((o) => {
 					tr_el = document.createElement("tr");
 					tr_el.classList.add("row_tr");
@@ -185,8 +180,8 @@
 					table_el.appendChild(tr_el)
 				})
 			}
-			createTable(doc_objcts);
-			createPaginationRow(doc_objcts);
+			createTable(displayListOfObjects);
+			createPaginationRow(displayListOfObjects);
 		</script>
 		<style>
 			* {
@@ -323,6 +318,9 @@
 			.doc_bts button:hover {
 				background-color: #eee;
 				cursor: pointer;
+			}
+			.doc_bts button:focus {
+				background-color: #eee;
 			}
 			.pagination_block {
 				padding: 5px 0 10px 0;
