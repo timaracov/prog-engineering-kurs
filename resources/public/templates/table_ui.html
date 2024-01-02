@@ -115,6 +115,14 @@
 				paginationNum = num;
 				resetTable(doc_objcts);
 				createTable(doc_objcts);
+				createPaginationRow(doc_objcts);
+			}
+
+			function setPaginationPage(pag_page) {
+				paginationPage = pag_page;
+				resetTable(doc_objcts);
+				createTable(doc_objcts);
+				createPaginationRow(doc_objcts);
 			}
 
 			function resetTable(list_of_objects) {
@@ -135,9 +143,37 @@
 				table_el.appendChild(tr_row);
 			}
 
+			function createPaginationRow(list_of_objects) {
+				num_of_pages = Math.ceil(list_of_objects.length/paginationNum);
+				console.log("fuck", list_of_objects.length, paginationNum, num_of_pages);
+				console.log("pag", paginationPage, paginationNum);
+				
+				pag_row = document.getElementsByClassName("pagination_block")[0];
+				last_button = document.getElementsByClassName("pag_ctrl_b")[1];
+
+				pag_num_buttons = Array.from(document.getElementsByClassName("pag_num_b"));
+				pag_num_buttons.forEach(b => {
+					b.remove();
+				})
+
+				Array(num_of_pages).fill(0).map((_, i) => i+1).forEach((num) => {
+					console.log(num);
+					but = document.createElement("button");
+					but.onclick = function() {setPaginationPage(num-1)};
+					but.classList.add("pag_num_b")
+					but.innerHTML = num;
+					pag_row.appendChild(but);
+					pag_row.insertBefore(but, last_button);
+				})
+			}
+
 			function createTable(dict_list) {
 				table_el = document.getElementById("data__table");
-				dict_list.slice(paginationPage, paginationPage+paginationNum).forEach((o) => {
+				console.log("createTable", Number(paginationPage), Number(paginationPage)+Number(paginationNum))
+				const slice_from = Number(paginationPage)*Number(paginationNum);
+				const slice_to = slice_from + Number(paginationNum);
+				console.log("slice", slice_from, slice_to);
+				dict_list.slice(slice_from, slice_to).forEach((o) => {
 					tr_el = document.createElement("tr");
 					tr_el.classList.add("row_tr");
 					for (var key in o) {
@@ -152,7 +188,8 @@
 					table_el.appendChild(tr_el)
 				})
 			}
-			createTable(doc_objcts)
+			createTable(doc_objcts);
+			createPaginationRow(doc_objcts);
 		</script>
 		<style>
 			* {
