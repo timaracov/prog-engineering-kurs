@@ -4,7 +4,6 @@
 		<title></title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link href="css/style.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	</head>
 	<body>
@@ -17,8 +16,8 @@
 						<button>Departments</button>
 					</div>
 					<div class="option_row">
-						<select id="slct">
-							<option value="5">5</option>
+						<select id="slct" onChange="setPaginationNum(this.value);">
+							<option value="5" selected="selected">5</option>
 							<option value="10">10</option>
 							<option value="25">25</option>
 						</select>
@@ -30,7 +29,14 @@
 						<button id="sb"><i class="fa fa-sort"></i></button>
 					</div>
 				</div>
-				<table>
+				<div class="pagination_block">
+					<button class="pag_ctrl_b" type="text"><</button>
+					<button class="pag_num_b" type="text">1</button>
+					<button class="pag_num_b" type="text">2</button>
+					<button class="pag_num_b" type="text">3</button>
+					<button class="pag_ctrl_b" type="text">></button>
+				</div>
+				<table id="data__table">
 					<tr class="header_tr">
 						<th>Id</th>
 						<th>Name</th>
@@ -39,6 +45,7 @@
 							<input id="cb" class="crud_c" type="button" name="create" value="+">
 						</th>
 					</tr>
+					<!--
 					<tr class="row_tr">
 						<th>abff-00ef-120a-338f</th>
 						<th>Bob</th>
@@ -57,6 +64,8 @@
 							<input id="cb" class="crud_d" type="button" name="delete" value="-">
 						</th>
 					</tr>
+					-->
+
 				</table>
 			</div>
 			<div class="create_els">
@@ -67,6 +76,84 @@
 				<button id="crb" type="text">Create</button>
 			</div>
 		</div>
+		<script>
+			let doc_objcts = [
+				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
+				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
+				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
+				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
+				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
+				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
+				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
+				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
+				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
+				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
+				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
+				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
+				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
+				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
+				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
+				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
+				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
+				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
+				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
+				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
+				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
+				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
+				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
+				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
+				{"Id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
+				{"Id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
+				{"Id": "0011-2fb0-aa01-ffff", "Name": "Leo", "Addr": "MSC_O"},
+				{"Id": "0000-0000-0000-0000", "Name": "Mark", "Addr": "FTPS"},
+			];
+
+			let paginationPage = 0;
+			let paginationNum = 5;
+
+			function setPaginationNum(num) {
+				paginationNum = num;
+				resetTable(doc_objcts);
+				createTable(doc_objcts);
+			}
+
+			function resetTable(list_of_objects) {
+				table_el = document.getElementById("data__table");
+				table_el.replaceChildren([]);
+				tr_row = document.createElement("tr");
+				tr_row.classList.add("header_tr");
+				for (var key in list_of_objects[0]) {
+					subth = document.createElement("th")
+					subth.innerHTML = key;
+					tr_row.appendChild(subth);
+				}
+				op_ui = document.createElement("th")
+				op_ui.classList.add("crth")
+				op_ui.innerHTML = '<input id="cb" class="crud_c" type="button" name="create" value="+">'
+				tr_row.appendChild(op_ui);
+
+				table_el.appendChild(tr_row);
+			}
+
+			function createTable(dict_list) {
+				table_el = document.getElementById("data__table");
+				dict_list.slice(paginationPage, paginationPage+paginationNum).forEach((o) => {
+					tr_el = document.createElement("tr");
+					tr_el.classList.add("row_tr");
+					for (var key in o) {
+						th_el = document.createElement("th")
+						th_el.innerHTML = o[key];
+						tr_el.appendChild(th_el);
+					}
+					ui_th = document.createElement("th");
+					ui_th.classList.add("crth");
+					ui_th.innerHTML = '<input id="cb" class="crud_u" type="button" name="update" value="+"><input id="cb" class="crud_d" type="button" name="delete" value="-">'
+					tr_el.appendChild(ui_th)
+					table_el.appendChild(tr_el)
+				})
+			}
+			createTable(doc_objcts)
+		</script>
 		<style>
 			* {
 				margin: 0 auto;
@@ -108,6 +195,7 @@
 				color: white;
 				width: 20px;
 				font-weight: bold;
+				margin-right: 5px;
 			}
 			.crud_c {
 				background-color: #33aa44;
@@ -204,15 +292,19 @@
 				background-color: #eee;
 				cursor: pointer;
 			}
+			.pagination_block {
+				padding: 5px 0 10px 0;
+			}
+			.pagination_block button {
+				border: 1px solid #bbb;
+				border-radius: 5px;
+				height: 20px;
+				background-color: white;
+			}
+			.pagination_block button:hover {
+				background-color: #eee;
+				cursor: pointer;
+			}
 		</style>
-		<script>
-			let doc_objcts = [
-				{"id": "abcd-0111-ffaa-01a1", "Name": "Bob", "Addr": "Zuzichstrasse"},
-				{"id": "0000-1231-f0ab-01a1", "Name": "Mike", "Addr": "Kal-d"},
-			];
-			doc_objcts.forEach((o) => {
-				console.log(o);
-			})
-		</script>
 	</body>
 </html>
