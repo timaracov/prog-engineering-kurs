@@ -1,6 +1,8 @@
-(import fastapi [FastAPI APIRouter])
+(import fastapi [FastAPI APIRouter Query])
 (import uvicorn [run])
 (import pydantic [BaseModel])
+
+(import enum [Enum])
 
 ; models
 (defclass Document [BaseModel]
@@ -10,18 +12,43 @@
     #^ str folder
     #^ str version))
 
+(defclass SortKey [Enum]
+  (setv 
+    by_author "author"
+    by_docs "docs"
+    by_depart "depart"))
+
 (setv root (APIRouter :prefix "/api"))
-(setv docrouter (APIRouter :prefix "/documents"))
+(setv docrouter (APIRouter :prefix "/documents" :tags ["Documents"]))
 
 ; routers
-(defn get_docs [[page 3] [num 25]] 
+(defn get_docs 
+  [[page (Query 0)] 
+   [num (Query 25)]
+   [sort_key #^ SortKey SortKey.by_docs]] 
   (print 123))
+
+(defn update_doc [#^ str doc_id data] 
+  (print "up"))
+
+(defn delete_doc [#^ str doc_id]
+  (print "dl"))
 
 ; set routers
 (docrouter.add_api_route 
   "/documents" 
   get_docs 
   :methods ["GET"])
+
+(docrouter.add_api_route 
+  "/documents/{doc_id}" 
+  update_doc 
+  :methods ["PUT"])
+
+(docrouter.add_api_route 
+  "/documents/{doc_id}" 
+  delete_doc 
+  :methods ["DELETE"])
 
 ; create app
 (setv api (FastAPI))
