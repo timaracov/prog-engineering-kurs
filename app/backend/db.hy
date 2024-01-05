@@ -1,5 +1,7 @@
 (import sqlite3 :as sql)
 (import models [Document])
+(import fakes)
+(import pprint [pprint])
 
 (defn get-con [] 
   (setv conn (sql.connect "src.db"))
@@ -32,6 +34,13 @@
   (cur.execute query)
   (con.commit))
 
+(defn add-docs []
+  (setv res [])
+  (for [x (range 15)]
+    ((. res append) (fakes.generate-fake-document)))
+  res
+)
+
 (defn prepare []
   (setv con (get-con))
   (setv cur (con.cursor))
@@ -62,6 +71,7 @@
       "foreign key(author_id) references authors(author_id)"
     ")")))
 
+
 ; main
 (prepare)
 (insert-document 
@@ -72,3 +82,4 @@
     :version "0.0.0"
     :author_id 0))
 (print (get-data-by-key "docs" "name" "bob"))
+(pprint (add-docs))

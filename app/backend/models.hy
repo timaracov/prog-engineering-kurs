@@ -1,6 +1,5 @@
 (import pydantic [BaseModel])
 
-; models
 (defclass Document [BaseModel]
     #^ int doc_id
     #^ str name
