@@ -34,10 +34,10 @@
   "" 
   get-author :methods ["GET"])
 (author_router.add_api_route 
-  "/{doc_id}" 
+  "/{author_id}" 
   update-author :methods ["PUT"])
 (author_router.add_api_route 
-  "/{doc_id}" 
+  "/{author_id}}" 
   delete-author :methods ["DELETE"])
 
 (department_router.add_api_route 
@@ -47,10 +47,10 @@
   "" 
   get-department :methods ["GET"])
 (department_router.add_api_route 
-  "/{doc_id}" 
+  "/{dep_id}" 
   update-department :methods ["PUT"])
 (department_router.add_api_route 
-  "/{doc_id}" 
+  "/{dep_id}" 
   delete-department :methods ["DELETE"])
 
 (auth_router.add_api_route
