@@ -11,3 +11,6 @@ pom.xml.asc
 .clj-kondo/
 .lsp/
 *.temp
+*.db
+**/__pycache__/**
+env/*
