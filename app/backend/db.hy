@@ -1,6 +1,6 @@
 (import sqlite3 :as sql)
 (import models [Document])
-(import fakes)
+(import fakes [generate-fake-document])
 (import pprint [pprint])
 
 (defn get-con [] 
@@ -13,12 +13,27 @@
 
 (defn get-data-by-key [#^ str table 
                        #^ str key
-                       #^ str data-value]
+                       #^ str data-value
+                       #^ int page
+                       #^ int num]
   (setv con (get-con))
   (setv cur (con.cursor))
-  (setv query f"select * from {table} where {key} = '{data-value}' group by {key}")
+  (setv query (+
+    f"select * from {table} "
+    f"where {key} = {data-value} "
+    f"order by {key} "
+    f"limit {num} "
+    f"offset {page}"))
+  (print query)
   (cur.execute query)
-  (cur.fetchall))
+  (setv tuple-data (cur.fetchall))
+  (lfor td tuple-data 
+        (dict 
+          :doc_id (get td 0)
+          :name (get td 1)
+          :folder (get td 2)
+          :version (get td 3)
+          :author_id (get td 4))))
 
 (defn insert-document [#^ Document doc]
   (setv con (get-con))
@@ -34,14 +49,27 @@
   (cur.execute query)
   (con.commit))
 
-(defn add-docs []
-  (setv res [])
-  (for [x (range 15)]
-    ((. res append) (fakes.generate-fake-document)))
-  res
-)
+(defn update-document [#^ Document doc]
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv query (+
+    "update docs set "
+    f"name = '{doc.name}', "
+    f"folder = '{doc.folder}', "
+    f"version = '{doc.version}', "
+    f"author_id = {doc.author_id} "
+    f"where doc_id = {doc.doc_id}"))
+  (cur.execute query)
+  (con.commit))
 
-(defn prepare []
+(defn delete-document [#^ int doc_id]
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv query f"delete from docs where doc_id = {doc_id}")
+  (cur.execute query)
+  (con.commit))
+
+(defn create-tables []
   (setv con (get-con))
   (setv cur (con.cursor))
   (cur.execute (+
@@ -71,15 +99,17 @@
       "foreign key(author_id) references authors(author_id)"
     ")")))
 
+(defn fill-docs [] 
+  (for [index (range 15)]
+    (setv doc (generate-fake-document))
+    ((. doc update) (dict :author_id 0 :doc_id index))
+    (insert-document 
+      ((. Document model_validate) doc))))
 
-; main
-(prepare)
-(insert-document 
-  (Document 
-    :doc_id 12
-    :name "bob"
-    :folder "/root"
-    :version "0.0.0"
-    :author_id 0))
-(print (get-data-by-key "docs" "name" "bob"))
-(pprint (add-docs))
+
+(defn prepare-db [] 
+  (create-tables)
+  (try
+    (fill-docs)
+    (except []
+      (print "\033[32mINFO\033[m:     Data already exist"))))

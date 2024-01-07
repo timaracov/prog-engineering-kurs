@@ -73,7 +73,7 @@
   logout-admin :methods ["GET"])
 
 
-(defn main []
+(defn run-api []
   (setv api (FastAPI))
   (root.include_router docrouter)
   (root.include_router author_router)
@@ -82,7 +82,3 @@
   (api.include_router root)
   (run api))
 
-; entrypoint
-(cond 
-  (= __name__ "__main__")
-    (main))
