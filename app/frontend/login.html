@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 	<body style="background-color: #d7d6dd">
+		<script src="./scripts/login.js"></script>
 		<style>
 			* {
 				margin: 0 auto;
@@ -47,13 +48,18 @@
 				background-color: #4444bb;
 				cursor: pointer;
 			}
+			#log {
+				width: 100%;
+				text-align: center;
+			}
 		</style>
 
 		<div class="login__card">
+			<p id="log" style="color: red"></p>
 			<h1 id="h" >Welcome</h1>	
-			<input id="inp" type="text" name="username">
-			<input id="inp" type="password" name="password">
-			<input class="login_b" type="button" name="login" value="Log in" onclick={console.log("aha")}>
+			<input class="uin" id="inp" type="text" name="username">
+			<input class="pin" id="inp" type="password" name="password">
+			<input class="login_b" type="button" name="login" value="Log in" onclick={loginUser()}>
 		</div>
 	</body>
 </html>

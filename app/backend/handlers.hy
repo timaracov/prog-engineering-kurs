@@ -109,6 +109,7 @@
 
 ;; AUTH
 (defn login-user [#^ str username #^ str password]
+  (print username password)
   (setv user (get-data-by-key 
                "users" "username" f"'{username}'" 0 1))
   (if (= user [])

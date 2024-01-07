@@ -148,8 +148,13 @@ function setPaginationPage(pag_page) {
 }
 
 function redirectToLoginPage() {
-	// check if authorized
-	window.location.replace("./login.html");
+	let u = localStorage.getItem("u");
+	let p = localStorage.getItem("p");
+	console.log(u, p);
+	//if (u == undefined || p == undefined) {
+	//	let current_loc = window.location.href;
+	//	window.location.href = current_loc.replace("index.html", "login.html")
+	//}
 }
 
 function resetTable(list_of_objects) {
@@ -195,7 +200,13 @@ function createTable(dict_list) {
 	crth_header.innerHTML = '<input id="cb" class="crud_c" type="button" name="create" value="+">';
 
 	tr_header.appendChild(crth_header);
-	table_el.appendChild(tr_header);
+	console.log("?", tr_header)
+	try {
+		table_el.appendChild(tr_header);
+		console.log("?")
+	} catch (error) {
+		console.log(error)	
+	}
 
 	const slice_from = Number(paginationPage)*Number(paginationNum);
 	const slice_to = slice_from + Number(paginationNum);
@@ -215,5 +226,8 @@ function createTable(dict_list) {
 		table_el.appendChild(tr_el)
 	})
 }
+
+redirectToLoginPage();
+
 createTable(displayListOfObjects);
-createPaginationRow(displayListOfObjects);
+//createPaginationRow(displayListOfObjects);

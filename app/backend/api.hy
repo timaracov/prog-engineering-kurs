@@ -1,4 +1,5 @@
 (import fastapi [FastAPI APIRouter Query])
+(import fastapi.middleware.cors [CORSMiddleware])
 (import uvicorn [run])
 
 (import handlers *)
@@ -66,6 +67,12 @@
 
 (defn run-api []
   (setv api (FastAPI))
+  (api.add_middleware 
+  	CORSMiddleware
+	:allow_origins ["*"]
+	:allow_credentials True
+	:allow_methods ["*"]
+	:allow_headers ["*"])
   (root.include_router docrouter)
   (root.include_router author_router)
   (root.include_router department_router)
