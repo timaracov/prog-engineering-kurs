@@ -14,3 +14,4 @@ pom.xml.asc
 *.db
 **/__pycache__/**
 env/*
+*.trash
