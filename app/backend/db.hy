@@ -13,6 +13,14 @@
   (setv con (get-con))
   (con.cursor))
 
+(defn get-data-part [#^ str table #^ int page #^ int num]
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv query f"select * from {table} limit {num} offset {page}")
+  (cur.execute query)
+  (setv tuple-data (cur.fetchall))
+  tuple-data)
+
 (defn get-data-by-key [#^ str table 
                        #^ str key
                        #^ str data-value
@@ -60,6 +68,7 @@
              (str el)
              f"'{el}'")))
     ")"))
+  (print query)
   (cur.execute query)
   (con.commit))
 

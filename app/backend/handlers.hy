@@ -57,13 +57,9 @@
             (JSONResponse (dict :message (str e)) :status_code 400))))
   resp)
 
-(defn get-author [(annotate sort-by SortKey) 
-                  (annotate sort-key-value str)
-                  [page (Query 0)] 
-                  [num (Query 25)]] 
+(defn get-author [[page (Query 0)] [num (Query 25)]] 
   (setv tuple-docs 
-    (get-data-by-key
-      "author" sort-by.value (prep-d sort-key-value) page num))
+    (get-data-part "author" page num))
   (lfor d tuple-docs
     (Author.model_validate 
       (tuple-to-model d Author))))
@@ -89,13 +85,10 @@
       (setv resp 
             (JSONResponse (dict :message (str e)) :status_code 400))))
   resp)
-(defn get-department [(annotate sort-by SortKey) 
-                      (annotate sort-key-value str)
-                      [page (Query 0)] 
-                      [num (Query 25)]] 
+
+(defn get-department [[page (Query 0)] [num (Query 25)]] 
   (setv tuple-docs 
-    (get-data-by-key
-      "departments" sort-by.value (prep-d sort-key-value) page num))
+    (get-data-part "departments" page num))
   (lfor d tuple-docs
     (Department.model_validate 
       (tuple-to-model d Department))))
