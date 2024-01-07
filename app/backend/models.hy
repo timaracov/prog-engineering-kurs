@@ -19,15 +19,15 @@
   #^ int author)
 
 
-(defclass DocumentPOST [BaseModel]
-  #^ str name
-  #^ str folder
-  #^ str version
-  #^ int author_id)
-
-
-(defclass DocumentGET [DocumentPOST]
-  #^ int doc_id)
+; (defclass DocumentPOST [BaseModel]
+;   #^ str name
+;   #^ str folder
+;   #^ str version
+;   #^ int author_id)
+; 
+; 
+; (defclass DocumentGET [DocumentPOST]
+;   #^ int doc_id)
 
 
 (defclass Author [BaseModel]
@@ -44,3 +44,10 @@
   #^ str location
   #^ str head
   #^ str phone)
+
+
+(defclass User [BaseModel]
+  #^ int user_id
+  #^ str username
+  #^ str password
+  #^ int is_admin)

@@ -108,18 +108,26 @@
 
 
 ;; AUTH
-(defn login-user [#^ str username 
-                  #^ str password]
-  [username password])
-(defn login-admin [#^ str username 
-                  #^ str password]
-  [username password])
-(defn get-user []
-  (dict))
-(defn get-admin []
-  (dict))
-(defn logout-user []
-  (dict))
-(defn logout-admin []
-  (dict))
+(defn login-user [#^ str username #^ str password]
+  (setv user (get-data-by-key 
+               "users" "username" f"'{username}'" 0 1))
+  (if (= user [])
+      (setv resp (JSONResponse (dict :message "Not found") :status_code 404))
+      (if (= password (get (get user 0) 3))
+            (setv resp (JSONResponse (dict :message "ok")))
+            (setv resp (JSONResponse (dict :message "Bad credentials") :status_code 400))))
+
+  resp)
+
+(defn login-admin [#^ str username #^ str password]
+  (setv user (get-data-by-key 
+               "users" "username" f"'{username}'" 0 1))
+  (if (= user [])
+      (setv resp (JSONResponse (dict :message "Not found") :status_code 404))
+      (if (= password (get (get user 0) 3))
+          (if (= 1 (get (get user 0) 2))
+            (setv resp (JSONResponse (dict :message "ok")))
+            (setv resp (JSONResponse (dict :message "Not admin") :status_code 403)))
+          (setv resp (JSONResponse (dict :message "Bad credentials") :status_code 400))))
+  resp)
 ;------------------------------------------------------------------------------;

@@ -50,3 +50,12 @@
     :location (fk.address)
     :head (fk.name)
     :phone (fk.phone_number)))
+
+(defn generate-fake-user [] 
+  (dict
+    :user_id (str (uuid4))
+    :username ((. 
+                ((. (fk.name) lower))
+                  replace) " " "_")
+    :password (fk.isbn10)
+    :is_admin (randint 0 1)))

@@ -145,6 +145,13 @@
   (setv con (get-con))
   (setv cur (con.cursor))
   (cur.execute (+
+    "create table if not exists users("
+      "user_id integer unique primary key not null,"
+      "username text unique not null,"
+      "is_admin integer not null default 0 check(is_admin < 2 AND is_admin > -1),"
+      "password text not null"
+    ")"))
+  (cur.execute (+
     "create table if not exists departments("
       "department_id integer unique primary key not null,"
       "name text not null,"
@@ -192,6 +199,13 @@
     (setv dep-model ((. Department model_validate) dep))
     (add-record dep-model "departments")))
 
+(defn fill-users [] 
+  (for [index (range 15)]
+    (setv u (generate-fake-user))
+    ((. u update) (dict :user_id index))
+    (setv u-model ((. User model_validate) u))
+    (add-record u-model "users")))
+
 (defn prepare-db [] 
   (cond (= (os.path.exists "src.db") False)
       (try
@@ -199,6 +213,7 @@
         (fill-departments)
         (fill-authors)
         (fill-docs)
+        (fill-users)
         (print "\033[32mINFO\033[m:     Filled")
         (except [e Exception]
           (print f"\033[32mINFO\033[m:     Data already exist: {e}")))))
