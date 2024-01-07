@@ -62,18 +62,6 @@
 (auth_router.add_api_route
   "/login/admin"
   login-admin :methods ["POST"])
-(auth_router.add_api_route
-  "/user"
-  get-user :methods ["GET"])
-(auth_router.add_api_route
-  "/admin"
-  get-admin :methods ["GET"])
-(auth_router.add_api_route
-  "/logout/user"
-  logout-user :methods ["GET"])
-(auth_router.add_api_route
-  "/logout/admin"
-  logout-admin :methods ["GET"])
 
 
 (defn run-api []
