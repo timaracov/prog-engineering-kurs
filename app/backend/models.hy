@@ -28,3 +28,9 @@
 
 (defclass DocumentGET [DocumentPOST]
 	#^ int doc_id)
+
+(defclass Author [BaseModel]
+  #^ int author_id)
+
+(defclass Department [BaseModel]
+  #^ int dep_id)

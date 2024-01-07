@@ -1,7 +1,9 @@
 (import sqlite3 :as sql)
-(import models [Document])
+(import models [Document BaseModel])
 (import fakes [generate-fake-document])
 (import pprint [pprint])
+
+(require hyrule [assoc])
 
 (defn get-con [] 
   (setv conn (sql.connect "src.db"))
@@ -24,48 +26,73 @@
     f"order by {key} "
     f"limit {num} "
     f"offset {page}"))
-  (print query)
   (cur.execute query)
   (setv tuple-data (cur.fetchall))
-  (lfor td tuple-data 
-        (dict 
-          :doc_id (get td 0)
-          :name (get td 1)
-          :folder (get td 2)
-          :version (get td 3)
-          :author_id (get td 4))))
+  tuple-data)
 
-(defn insert-document [#^ Document doc]
+(defn tuple-to-model [#^ tuple data
+                      #^ BaseModel model]
+  (setv res (dict))
+  (setv kvs ((. (. model model_fields) items)))
+  (setv enkvs (enumerate kvs))
+  (for [en_pair enkvs]
+    (setv n (get en_pair 0))
+    (setv k (get (get en_pair 1) 0))
+    (assoc res k (get data n)))
+  res)
+
+(defn add-record [#^ BaseModel mr
+                  #^ str table] 
   (setv con (get-con))
   (setv cur (con.cursor))
+  (setv record-keys 
+    (+ "("
+       ((. ", " join) 
+         (tuple 
+           ((.  (. mr model_fields) keys))))
+       ")"))
   (setv query (+
-    "insert into docs (doc_id, name, folder, version, author_id) values ("
-      f"{doc.doc_id}, "
-      f"'{doc.name}', "
-      f"'{doc.folder}', "
-      f"'{doc.version}', "
-      f"{doc.author_id}"
+    f"insert into {table} {record-keys} values ("
+    ((. ", " join)
+      (lfor el 
+            (tuple ((. ((. mr model_dump)) values)))
+       (if (= (isinstance el int) True)
+             (str el)
+             f"'{el}'")))
     ")"))
   (cur.execute query)
   (con.commit))
 
-(defn update-document [#^ Document doc]
+
+(defn update-record [#^ BaseModel mr
+                     #^ str table
+                     #^ str record_key
+                     #^ int record_id]
   (setv con (get-con))
   (setv cur (con.cursor))
+  (setv rstr "")
+  (setv kvs ((. ((. mr model_dump)) items)))
+  (for [pair kvs]
+    (setv v (get pair 1))
+    (setv k (get pair 0))
+    (setv rstr (+
+        rstr
+        f"{k} = "
+        (if (= (isinstance v int) True)
+            f"{v}, " f"'{v}', "))))
   (setv query (+
-    "update docs set "
-    f"name = '{doc.name}', "
-    f"folder = '{doc.folder}', "
-    f"version = '{doc.version}', "
-    f"author_id = {doc.author_id} "
-    f"where doc_id = {doc.doc_id}"))
+    f"update {table} set " 
+    (cut rstr 0 -2)
+    f" where {record_key} = {record_id}"))
   (cur.execute query)
   (con.commit))
 
-(defn delete-document [#^ int doc_id]
+(defn delete-record [#^ int record_id
+                     #^ str record_key
+                     #^ str table]
   (setv con (get-con))
   (setv cur (con.cursor))
-  (setv query f"delete from docs where doc_id = {doc_id}")
+  (setv query f"delete from {table} where {record_key} = {record_id}")
   (cur.execute query)
   (con.commit))
 
@@ -105,7 +132,6 @@
     ((. doc update) (dict :author_id 0 :doc_id index))
     (insert-document 
       ((. Document model_validate) doc))))
-
 
 (defn prepare-db [] 
   (create-tables)
