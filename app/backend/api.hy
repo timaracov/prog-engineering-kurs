@@ -21,6 +21,9 @@
   "" 
   get_docs :methods ["GET"])
 (docrouter.add_api_route 
+  "/joined" 
+  get-docs-all :methods ["GET"])
+(docrouter.add_api_route 
   "/{doc_id}" 
   update_doc :methods ["PUT"])
 (docrouter.add_api_route 

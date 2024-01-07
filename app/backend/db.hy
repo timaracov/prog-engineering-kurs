@@ -1,6 +1,7 @@
+(import os)
 (import sqlite3 :as sql)
 (import models [Document BaseModel])
-(import fakes [generate-fake-document])
+(import fakes *)
 (import pprint [pprint])
 
 (require hyrule [assoc])
@@ -12,6 +13,42 @@
 (defn get-cur []
   (setv con (get-con))
   (con.cursor))
+
+(defn get-docs-joined [] 
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv query (+
+      "select doc_id, "
+             "docs.name, "
+             "folder, "
+             "version, "
+             "fullname, "
+             "education, "
+             "university, "
+             "departments.name, "
+             "location, "
+             "head, "
+             "phone "
+      "from docs join author on author.author_id = docs.author "
+      "join departments on departments.department_id = author.department"))
+  (cur.execute query)
+  (setv tuple-data (cur.fetchall))
+  (setv res [])
+  (for [x tuple-data] 
+    ((. res append) 
+     (dict 
+       :doc_id (get x 0)
+       :doc_name (get x 1)
+       :folder (get x 2)
+       :version (get x 3)
+       :fullname (get x 4)
+       :education (get x 5)
+       :univercity (get x 6)
+       :dep_name (get x 7)
+       :location (get x 8)
+       :head (get x 9)
+       :phone (get x 10))))
+  res)
 
 (defn get-data-part [#^ str table #^ int page #^ int num]
   (setv con (get-con))
@@ -68,7 +105,6 @@
              (str el)
              f"'{el}'")))
     ")"))
-  (print query)
   (cur.execute query)
   (con.commit))
 
@@ -122,8 +158,8 @@
       "fullname text not null,"
       "education text not null,"
       "university text not null,"
-      "department_id integer,"
-      "foreign key(department_id) references departments(department_id)"
+      "department integer,"
+      "foreign key(department) references departments(department_id)"
     ")"))
   (cur.execute (+
     "create table if not exists docs("
@@ -131,20 +167,38 @@
       "name text not null unique,"
       "folder text not null,"
       "version text not null,"
-      "author_id integer,"
-      "foreign key(author_id) references authors(author_id)"
+      "author integer,"
+      "foreign key(author) references authors(author_id)"
     ")")))
 
 (defn fill-docs [] 
   (for [index (range 15)]
     (setv doc (generate-fake-document))
-    ((. doc update) (dict :author_id 0 :doc_id index))
-    (insert-document 
-      ((. Document model_validate) doc))))
+    ((. doc update) (dict :doc_id index))
+    (setv doc-model ((. Document model_validate) doc))
+    (add-record doc-model "docs")))
+
+(defn fill-authors [] 
+  (for [index (range 15)]
+    (setv author (generate-fake-author))
+    ((. author update) (dict :author_id index))
+    (setv author-model ((. Author model_validate) author))
+    (add-record author-model "author")))
+
+(defn fill-departments [] 
+  (for [index (range 15)]
+    (setv dep (generate-fake-department))
+    ((. dep update) (dict :department_id index))
+    (setv dep-model ((. Department model_validate) dep))
+    (add-record dep-model "departments")))
 
 (defn prepare-db [] 
-  (create-tables)
-  (try
-    (fill-docs)
-    (except []
-      (print "\033[32mINFO\033[m:     Data already exist"))))
+  (cond (= (os.path.exists "src.db") False)
+      (try
+        (create-tables)
+        (fill-departments)
+        (fill-authors)
+        (fill-docs)
+        (print "\033[32mINFO\033[m:     Filled")
+        (except [e Exception]
+          (print f"\033[32mINFO\033[m:     Data already exist: {e}")))))

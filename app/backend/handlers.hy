@@ -23,6 +23,9 @@
       (setv resp 
             (JSONResponse (dict :message (str e)) :status_code 400))))
   resp)
+
+(defn get-docs-all [] 
+  (get-docs-joined))
   
 (defn get_docs [(annotate sort-by SortKey) 
                 (annotate sort-key-value str)

@@ -16,7 +16,7 @@
   #^ str name
   #^ str folder
   #^ str version
-  #^ int author_id)
+  #^ int author)
 
 
 (defclass DocumentPOST [BaseModel]
@@ -35,7 +35,7 @@
   #^ str fullname
   #^ str education
   #^ str university
-  #^ int department_id)
+  #^ int department)
 
 
 (defclass Department [BaseModel]
