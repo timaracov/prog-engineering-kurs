@@ -4,56 +4,9 @@
 		<title></title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="./styles/login.css">
 	</head>
 	<body style="background-color: #d7d6dd">
-		<script src="./scripts/login.js"></script>
-		<style>
-			* {
-				margin: 0 auto;
-				font-family: Monospace;
-			}
-
-			.login__card {
-				padding: 10px;
-				border: 2px solid "#999";
-				border-radius: 5px;
-				background-color: white;
-				width: 200px;
-				position: absolute;
-				left: 50%;
-				top: 50%;
-				margin-left: -100px;
-  				margin-top: -100px;
-			}
-			#h {
-				margin: 20px 0;
-				text-align: center;
-			}
-
-			#inp {
-				padding: 5px;
-				width: 187px;
-				margin: 10px 0;
-			}
-
-			.login_b {
-				background-color: #5555ee;
-				border: none;
-				border-radius: 5px;
-				padding: 5px;
-				width: 200px;
-				color: white;
-			}
-			.login_b:hover {
-				background-color: #4444bb;
-				cursor: pointer;
-			}
-			#log {
-				width: 100%;
-				text-align: center;
-			}
-		</style>
-
 		<div class="login__card">
 			<p id="log" style="color: red"></p>
 			<h1 id="h" >Welcome</h1>	
@@ -61,5 +14,6 @@
 			<input class="pin" id="inp" type="password" name="password">
 			<input class="login_b" type="button" name="login" value="Log in" onclick={loginUser()}>
 		</div>
+		<script src="./scripts/login.js"></script>
 	</body>
 </html>
