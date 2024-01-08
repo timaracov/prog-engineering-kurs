@@ -41,7 +41,7 @@
   "/{author_id}" 
   update-author :methods ["PUT"])
 (author_router.add_api_route 
-  "/{author_id}}" 
+  "/{author_id}" 
   delete-author :methods ["DELETE"])
 
 (department_router.add_api_route 

@@ -1,6 +1,6 @@
 * {
-	margin: 0 auto;
-	font-family: Monospace;
+  margin: 0 auto;
+  font-family: Monospace;
 }
 
 table {
@@ -9,7 +9,8 @@ table {
   border-spacing: 0;
   overflow: hidden;
 }
-td, th {
+td,
+th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
@@ -27,127 +28,140 @@ tr:last-child th:last-child {
   border-bottom-right-radius: 5px;
 }
 
+.th_cell {
+  border: 0;
+  resize: none;
+  width: 100px;
+  height: auto;
+}
+
+.th_cell_id {
+  width: 20px;
+}
+
 .header_tr {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 #cb {
-	outline: none;
-	border: none;
-	border-radius: 5px;
-	color: white;
-	width: 20px;
-	font-weight: bold;
-	margin-right: 5px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  width: 20px;
+  font-weight: bold;
+  margin-right: 5px;
 }
 .crud_c {
-	background-color: #33aa44;
+  background-color: #33aa44;
 }
 .crud_u {
-	background-color: #3355ff;
+  background-color: #3355ff;
 }
 .crud_d {
-	background-color: #ff4444;
+  background-color: #ff4444;
 }
 .crud_c:hover {
-	background-color: #229933;
-	cursor: pointer;
+  background-color: #229933;
+  cursor: pointer;
 }
 .crud_u:hover {
-	background-color: #2244ee;
-	cursor: pointer;
+  background-color: #2244ee;
+  cursor: pointer;
 }
 .crud_d:hover {
-	background-color: #ee3333;
-	cursor: pointer;
+  background-color: #ee3333;
+  cursor: pointer;
 }
 
 .root {
-	margin-top: 50px;
-	width: 1200px;
+  margin-top: 50px;
+  width: 1200px;
 }
 .central_ui {
-	width: 800px;
-	float: left;
+  min-width: 800px;
+  width: 100%;
+  float: left;
 }
 .create_els {
-	margin-top: 30px;
-	width: 300px;
-	float: right;
-	padding: 0 25px;
+  margin-top: 30px;
+  width: 300px;
+  float: right;
+  padding: 0 25px;
 }
 .create_els input {
-	width: 100%;
-	margin-bottom: 10px;
-	outline: none;
+  width: 100%;
+  margin-bottom: 10px;
+  outline: none;
 }
 #crb {
-	width: 308px;
-	padding: 0;
-	margin: 0;
+  width: 308px;
+  padding: 0;
+  margin: 0;
 }
 
 #slct {
-	border: 1px solid #bbb;
-	border-radius: 5px;
-	height: 20px;
-	background-color: white;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  height: 20px;
+  background-color: white;
 }
 #slct:hover {
-	background-color: #eee;
-	cursor: pointer;
+  background-color: #eee;
+  cursor: pointer;
 }
 #sb {
-	border: 1px solid #bbb;
-	border-radius: 5px;
-	height: 20px;
-	background-color: white;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  height: 20px;
+  background-color: white;
 }
 #sb:hover {
-	background-color: #eee;
-	cursor: pointer;
+  background-color: #eee;
+  cursor: pointer;
 }
 .crth {
-	width: 50px;
+  width: 50px;
 }
 
 .option_row {
-	margin-right: 0;
+  margin-right: 0;
 }
 .tabs_row {
-	margin-bottom: 10px;
-	display: flex;
-	justify-content: space-between;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 .tabs_row button {
-	border: 1px solid #bbb;
-	border-radius: 5px;
-	height: 20px;
-	background-color: white;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  height: 20px;
+  background-color: white;
 }
 .doc_bts {
-	margin-left: 0;
+  margin-left: 0;
 }
 .doc_bts button:hover {
-	background-color: #eee;
-	cursor: pointer;
+  background-color: #eee;
+  cursor: pointer;
 }
 .doc_bts button:focus {
-	background-color: #eee;
+  background-color: #eee;
 }
 .pagination_block {
-	padding: 5px 0 10px 0;
+  padding: 5px 0 10px 0;
 }
 .pagination_block button {
-	border: 1px solid #bbb;
-	border-radius: 5px;
-	height: 20px;
-	background-color: white;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  height: 20px;
+  background-color: white;
 }
 .pagination_block button:hover {
-	background-color: #eee;
-	cursor: pointer;
+  background-color: #eee;
+  cursor: pointer;
 }
 .pag_num_b {
-	margin: 0 5px 0 0;
+  margin: 0 5px 0 0;
 }
