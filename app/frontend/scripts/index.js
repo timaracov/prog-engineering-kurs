@@ -140,6 +140,13 @@ function setPaginationNum(num) {
 	createPaginationRow(displayListOfObjects);
 }
 
+function recreateTable() {
+	console.log(displayListOfObjects);
+	resetTable(displayListOfObjects);
+	createTable(displayListOfObjects);
+	createPaginationRow(displayListOfObjects);
+}
+
 function setPaginationPage(pag_page) {
 	paginationPage = pag_page;
 	resetTable(displayListOfObjects);
@@ -229,6 +236,51 @@ function createTable(dict_list) {
 	})
 }
 
-redirectToLoginPage();
-createTable(displayListOfObjects);
-createPaginationRow(displayListOfObjects);
+function getDocuments() {
+	const url = "http://localhost:8000/api/documents/joined";
+
+	fetch(url, {method: "GET"})
+	.then((resp) => {
+		resp.json().then((d) => {
+			console.log(d)
+			displayListOfObjects = d;
+			recreateTable()
+		})
+	})
+}
+
+function getAuthors() {
+	const url = "http://localhost:8000/api/authors";
+
+	fetch(url, {method: "GET"})
+	.then((resp) => {
+		resp.json().then((d) => {
+			console.log(d)
+			displayListOfObjects = d;
+			recreateTable()
+		})
+	})
+}
+
+function getDepartments() {
+	const url = "http://localhost:8000/api/departments";
+
+	fetch(url, {method: "GET"})
+	.then((resp) => {
+		resp.json().then((d) => {
+			console.log(d)
+			displayListOfObjects = d;
+			recreateTable()
+		})
+	})
+}
+
+function onStartup() {
+	redirectToLoginPage();
+	createTable(displayListOfObjects);
+	createPaginationRow(displayListOfObjects);
+	getDocuments()
+}
+
+
+onStartup()

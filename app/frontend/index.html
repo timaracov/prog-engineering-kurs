@@ -12,9 +12,10 @@
 			<div class="central_ui">
 				<div class="tabs_row">
 					<div class="doc_bts">
-						<button onclick="changeDataSource(documents)">Documents</button>
-						<button onclick="changeDataSource(authors)">Authors</button>
-						<button onclick="changeDataSource(departments)">Departments</button>
+						<!--<button onclick="changeDataSource(documents)">Documents</button>-->
+						<button onclick="getDocuments()">Documents</button>
+						<button onclick="getAuthors()">Authors</button>
+						<button onclick="getDepartments()">Departments</button>
 					</div>
 					<div class="option_row">
 						<select id="slct" onChange="setPaginationNum(this.value);">
@@ -38,6 +39,7 @@
 				<table id="data__table">
 				</table>
 			</div>
+			<!--
 			<div class="create_els">
 				<input type="text" name="name" placeholder="Name">
 				<input type="text" name="version" placeholder="Version">
@@ -45,6 +47,7 @@
 				<input type="text" name="author" placeholder="Author">
 				<button id="crb" type="text">Create</button>
 			</div>
+			-->
 		</div>
 		<script src="./scripts/index.js">
 		</script>

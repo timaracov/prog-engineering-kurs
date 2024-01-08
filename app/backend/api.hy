@@ -13,7 +13,7 @@
 (setv author_router 
   (APIRouter :prefix "/authors" :tags ["Authors"]))
 (setv department_router
-  (APIRouter :prefix "/deparments" :tags ["Deparments"]))
+  (APIRouter :prefix "/departments" :tags ["Deparments"]))
 
 (docrouter.add_api_route 
   "" 
