@@ -4,6 +4,8 @@ let currentPaginationPage = 0;
 let currentPaginationNum = 5;
 let currentTableName = null;
 
+const boxContainer = document.getElementById("create-row-block");
+
 function recreateTable() {
   resetTable(displayListOfObjects);
   createTable(displayListOfObjects);
@@ -33,7 +35,7 @@ function setPaginationPage(pag_page) {
 
 function red(from, to) {
   let current_loc = window.location.href;
-  // window.location.href = current_loc.replace(from, to)
+  //   window.location.href = current_loc.replace(from, to);
 }
 
 function redirectToLoginPage() {
@@ -90,7 +92,7 @@ function createPaginationRow(list_of_objects) {
 
 function createTable(dict_list) {
   table_el = document.getElementById("data__table");
-  console.log(table_el);
+  const dictKeys = [];
 
   tr_header = document.createElement("tr");
   tr_header.classList.add("header_tr");
@@ -99,11 +101,15 @@ function createTable(dict_list) {
     th = document.createElement("th");
     th.innerHTML = key;
     tr_header.appendChild(th);
+
+    dictKeys.push(key);
   }
 
   crth_header = document.createElement("th");
   crth_header.classList.add("crth");
-  crth_header.innerHTML = '<input id="cb" class="crud_c" type="button" name="create" value="+">';
+  crth_header.innerHTML = '<input id="cb" data-action="tr_add" class="crud_c" type="button" name="create" value="+">';
+
+  crth_header.addEventListener("click", () => addBox(dictKeys, currentTableName));
 
   tr_header.appendChild(crth_header);
   table_el.appendChild(tr_header);
@@ -126,7 +132,7 @@ function createTable(dict_list) {
 
       th_el = document.createElement("th");
       th_el.classList.add("th_cell_id");
-      th_el.innerHTML = `<textarea disabled class="th_cell ${customClass}" value="${o[key]}">${o[key]}</textarea>`;
+      th_el.innerHTML = `<textarea data-id=${customClass} data-key=${key} disabled class="th_cell ${customClass}" value="${o[key]}">${o[key]}</textarea>`;
       tr_el.appendChild(th_el);
     }
 
@@ -137,23 +143,129 @@ function createTable(dict_list) {
     const updateButton = ui_th.querySelector('[data-action="tr_update"]');
     const deleteButton = ui_th.querySelector('[data-action="tr_delete"]');
 
-    updateButton.addEventListener("click", (event) => onUpdateClick(row_id, tr_el, event));
+    updateButton.addEventListener("click", (event) => onUpdateClick(row_id, updateButton, event));
     deleteButton.addEventListener("click", (event) => deleteTableRow(row_id, event));
+
     tr_el.appendChild(ui_th);
     table_el.appendChild(tr_el);
   });
 }
 
-function onUpdateClick() {}
+function addBox(dictKeys, currentTableName) {
+  if (boxContainer.style.display === "block") {
+    boxContainer.style.display = "none";
+    boxContainer.innerHTML = "";
+  } else {
+    boxContainer.style.display = "block";
 
-function deleteTableRow(id, event) {
+    dictKeys.forEach((el) => {
+      inputContainer = document.createElement("div");
+      inputContainer.innerHTML = `<input type="text" placeholder=${el} name='${el}' >`;
+      boxContainer.append(inputContainer);
+    });
+
+    buttonContainer = document.createElement("div");
+    buttonContainer.innerHTML = `<input type="button" value="add" />`;
+    buttonContainer.classList.add("crb");
+    buttonContainer.addEventListener("click", () => submitAddRow(currentTableName));
+    boxContainer.append(buttonContainer);
+  }
+}
+
+function submitAddRow(currentTableName) {
+  const allAddInputs = boxContainer.querySelectorAll("input[type='text']");
+  const data = [];
+  let obj = {};
+
+  allAddInputs.forEach((el) => {
+    obj[el.getAttribute("name")] = el.value;
+  });
+  data.push(obj);
+
+  const url = `http://localhost:8000/api/${currentTableName}`;
+
+  (async () => {
+    const query = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(data[0]),
+    });
+
+    const res = await query.json();
+
+    if (res.message == "ok") {
+      alert("Data saved");
+    } else {
+      alert("Error");
+    }
+  })();
+
+  console.log(data);
+}
+
+function onUpdateClick(row_id, updateButton, event) {
+  const row_node = event.target.parentElement.parentElement;
+  const allInputs = row_node.querySelectorAll("[data-id]");
+
+  if (updateButton.value === "+") {
+    allInputs.forEach((el) => {
+      if (el.getAttribute("data-id") === "null") {
+        el.removeAttribute("disabled");
+        el.style.border = "1px solid black";
+        el.style.borderRadius = "5px";
+      }
+    });
+
+    updateButton.value = "ok";
+  } else {
+    const dataArray = [];
+
+    let obj = {};
+    allInputs.forEach((el) => {
+      obj[el.getAttribute("data-key")] = el.value;
+    });
+    dataArray.push(obj);
+
+    const url = `http://localhost:8000/api/${currentTableName}/${row_id}`;
+
+    (async () => {
+      const query = await fetch(url, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: JSON.stringify(dataArray[0]),
+      });
+
+      const res = await query.json();
+
+      if (res.message == "ok") {
+        alert("Data saved");
+
+        allInputs.forEach((el) => {
+          el.setAttribute("disabled", true);
+          el.style.border = "0";
+        });
+
+        updateButton.value = "+";
+      } else {
+        alert("Error");
+      }
+    })();
+  }
+}
+
+function deleteTableRow(row_id, event) {
   const row_node = event.target.parentElement.parentElement;
   if (row_node.className === "row_tr") {
-    const url = `http://localhost:8000/api/${currentTableName}/${id}`;
+    const url = `http://localhost:8000/api/${currentTableName}/${row_id}`;
 
     fetch(url, { method: "DELETE" })
       .then((resp) => {
-        console.log(resp);
         row_node.remove();
       })
       .catch((error) => console.log(error));
