@@ -148,13 +148,20 @@ function setPaginationPage(pag_page) {
 }
 
 function redirectToLoginPage() {
-	let u = localStorage.getItem("u");
-	let p = localStorage.getItem("p");
-	console.log(u, p);
-	//if (u == undefined || p == undefined) {
-	//	let current_loc = window.location.href;
-	//	window.location.href = current_loc.replace("index.html", "login.html")
-	//}
+	var crd = document.cookie
+		.split("; ")
+		.find(row => row.startsWith("crd"))
+		.substring(4);
+
+	var up = new URLSearchParams(crd);
+	u = up.get("u"),
+	p = up.get("p")
+
+	console.log(u, p)
+	if (u == undefined || p == undefined) {
+		let current_loc = window.location.href;
+		window.location.href = current_loc.replace("index.html", "login.html")
+	}
 }
 
 function resetTable(list_of_objects) {
@@ -187,6 +194,7 @@ function createPaginationRow(list_of_objects) {
 
 function createTable(dict_list) {
 	table_el = document.getElementById("data__table");
+	console.log(table_el)
 
 	tr_header = document.createElement("tr");
 	tr_header.classList.add("header_tr");
@@ -200,13 +208,7 @@ function createTable(dict_list) {
 	crth_header.innerHTML = '<input id="cb" class="crud_c" type="button" name="create" value="+">';
 
 	tr_header.appendChild(crth_header);
-	console.log("?", tr_header)
-	try {
-		table_el.appendChild(tr_header);
-		console.log("?")
-	} catch (error) {
-		console.log(error)	
-	}
+	table_el.appendChild(tr_header);
 
 	const slice_from = Number(paginationPage)*Number(paginationNum);
 	const slice_to = slice_from + Number(paginationNum);
@@ -228,6 +230,5 @@ function createTable(dict_list) {
 }
 
 redirectToLoginPage();
-
 createTable(displayListOfObjects);
-//createPaginationRow(displayListOfObjects);
+createPaginationRow(displayListOfObjects);

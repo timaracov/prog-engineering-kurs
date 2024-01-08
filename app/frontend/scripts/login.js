@@ -10,8 +10,11 @@ function loginUser() {
 			if (resp.status < 300) {
 				log_p.style["color"] = "green";
 				log_p.innerHTML = d.message;
-				localStorage.setItem("u", username_el);
-				localStorage.setItem("p", password_el);
+
+				var p = new URLSearchParams();
+				p.append("u", username_el)
+				p.append("p", password_el)
+				document.cookie = "crd="+p.toString()
 				let current_loc = window.location.href;
 				window.location.href = current_loc.replace("login.html", "index.html")
 			} else {
