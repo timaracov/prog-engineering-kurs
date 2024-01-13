@@ -35,7 +35,7 @@ function setPaginationPage(pag_page) {
 
 function red(from, to) {
   let current_loc = window.location.href;
-  //   window.location.href = current_loc.replace(from, to);
+  window.location.href = current_loc.replace(from, to);
 }
 
 function redirectToLoginPage() {
@@ -55,6 +55,42 @@ function redirectToLoginPage() {
   if (u == undefined || p == undefined) {
     red("index.html", "login.html");
   }
+}
+
+function createAuthorOptionMenu() {
+	const url = "http://localhost:8000/api/authors";
+	selecter = document.createElement("select")
+	selecter.name = "author";
+	selecter.classList.add("islct");
+    (async () => {
+        const query = await fetch(url);
+        const res = await query.json();
+		Array.from(res).forEach((e) => {
+			op = document.createElement("option");
+			op.value = e.author_id;
+			op.innerHTML = e.fullname;
+			selecter.appendChild(op);
+		})
+    })();
+	return selecter;
+}
+
+function createDepartmentsOptionMenu() {
+	const url = "http://localhost:8000/api/departments";
+	selecter = document.createElement("select")
+	selecter.name = "department";
+	selecter.classList.add("islct");
+    (async () => {
+        const query = await fetch(url);
+        const res = await query.json();
+		Array.from(res).forEach((e) => {
+			op = document.createElement("option");
+			op.value = e.department_id;
+			op.innerHTML = e.name;
+			selecter.appendChild(op);
+		})
+    })();
+	return selecter;
 }
 
 function resetTable(list_of_objects) {
@@ -92,23 +128,33 @@ function createPaginationRow(list_of_objects) {
 
 function createTable(dict_list) {
   table_el = document.getElementById("data__table");
-  const dictKeys = [];
+  let dictKeys = [];
 
   tr_header = document.createElement("tr");
   tr_header.classList.add("header_tr");
 
   for (var key in dict_list[0]) {
+    dictKeys.push(key);
     th = document.createElement("th");
     th.innerHTML = key;
     tr_header.appendChild(th);
+  }
 
-    dictKeys.push(key);
+  const allowed = ["doc_id", "name", "folder", "version", "author"]
+  if (dictKeys.includes("doc_id")) {
+	  dictKeys = dictKeys.filter((el) => {
+		  if (allowed.includes(el)) {
+			  console.log(el);
+			  return el
+		  }
+	  })
   }
 
   crth_header = document.createElement("th");
   crth_header.classList.add("crth");
   crth_header.innerHTML = '<input id="cb" data-action="tr_add" class="crud_c" type="button" name="create" value="+">';
 
+  console.log("DL", dict_list, "DK", dictKeys, currentTableName);
   crth_header.addEventListener("click", () => addBox(dictKeys, currentTableName));
 
   tr_header.appendChild(crth_header);
@@ -159,13 +205,23 @@ function addBox(dictKeys, currentTableName) {
     boxContainer.style.display = "block";
 
     dictKeys.forEach((el) => {
-      inputContainer = document.createElement("div");
-      inputContainer.innerHTML = `<input type="text" placeholder=${el} name='${el}' >`;
-      boxContainer.append(inputContainer);
+	  if (el == "department") {
+		  selecter = createDepartmentsOptionMenu();
+		  boxContainer.append(selecter);
+	  } else if (el == "author") {
+		  console.log("addBox", el)
+		  selecter = createAuthorOptionMenu();
+		  boxContainer.append(selecter);
+		  console.log(boxContainer);
+	  } else {
+		  inputContainer = document.createElement("div");
+		  inputContainer.innerHTML = `<input class="islct_in" type="text" placeholder=${el} name='${el}'>`;
+		  boxContainer.append(inputContainer);
+	  }
     });
 
     buttonContainer = document.createElement("div");
-    buttonContainer.innerHTML = `<input type="button" value="add" />`;
+    buttonContainer.innerHTML = `<input type="button" value="add"/>`;
     buttonContainer.classList.add("crb");
     buttonContainer.addEventListener("click", () => submitAddRow(currentTableName));
     boxContainer.append(buttonContainer);
@@ -173,16 +229,21 @@ function addBox(dictKeys, currentTableName) {
 }
 
 function submitAddRow(currentTableName) {
+  const selectInputs = boxContainer.querySelectorAll("select");
   const allAddInputs = boxContainer.querySelectorAll("input[type='text']");
+
+  const elements = Array.from(selectInputs).concat(Array.from(allAddInputs))
+
   const data = [];
   let obj = {};
 
-  allAddInputs.forEach((el) => {
-    obj[el.getAttribute("name")] = el.value;
+  elements.forEach((el) => {
+	obj[el.getAttribute("name")] = el.value;
   });
   data.push(obj);
 
   const url = `http://localhost:8000/api/${currentTableName}`;
+  console.log(data);
 
   (async () => {
     const query = await fetch(url, {
@@ -199,7 +260,11 @@ function submitAddRow(currentTableName) {
     if (res.message == "ok") {
       alert("Data saved");
     } else {
-      alert("Error");
+	  if (res.detail == null) {
+		  alert(`Error:\n${JSON.stringify(res.message)}`);
+	  } else {
+		  alert(`Error:\n${JSON.stringify(res.detail[0].msg)}`);
+	  }
     }
   })();
 

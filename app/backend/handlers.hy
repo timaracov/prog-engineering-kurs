@@ -60,6 +60,9 @@
             (JSONResponse (dict :message (str e)) :status_code 400))))
   resp)
 
+(defn get-author-all [] 
+  (get-authors-joined))
+
 (defn get-author [[page (Query 0)] [num (Query 25)]] 
   (setv tuple-docs 
     (get-data-part "author" page num))

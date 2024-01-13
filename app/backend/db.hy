@@ -14,20 +14,52 @@
   (setv con (get-con))
   (con.cursor))
 
+(defn get-authors-joined [] 
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv query (+
+      "select author_id, "
+             "fullname, "
+             "education, "
+             "university, "
+             "departments.department_id, "
+             "departments.name, "
+             "departments.location, "
+             "departments.head, "
+             "departments.phone "
+      "from author join departments on departments.department_id = author.department"))
+  (cur.execute query)
+  (setv tuple-data (cur.fetchall))
+  (setv res [])
+  (for [x tuple-data] 
+    ((. res append) 
+     (dict 
+       :author_id (get x 0)
+       :fullname (get x 1)
+       :education (get x 2)
+       :university (get x 3)
+       :department_id (get x 4)
+       :department_name (get x 5)
+       :department_location (get x 6)
+       :department_head (get x 7)
+       :department_phone (get x 8))))
+  res)
+
 (defn get-docs-joined [] 
   (setv con (get-con))
   (setv cur (con.cursor))
   (setv query (+
       "select doc_id, "
-             "docs.name, "
+             "docs.name as name, "
              "folder, "
              "version, "
              "fullname, "
              "education, "
              "university, "
-             "departments.name, "
+             "departments.name as dep_name, "
              "location, "
              "head, "
+             "author.author_id as author, "
              "phone "
       "from docs join author on author.author_id = docs.author "
       "join departments on departments.department_id = author.department"))
@@ -38,7 +70,7 @@
     ((. res append) 
      (dict 
        :doc_id (get x 0)
-       :doc_name (get x 1)
+       :name (get x 1)
        :folder (get x 2)
        :version (get x 3)
        :fullname (get x 4)
@@ -47,7 +79,8 @@
        :dep_name (get x 7)
        :location (get x 8)
        :head (get x 9)
-       :phone (get x 10))))
+       :author (get x 10)
+       :phone (get x 11))))
   res)
 
 (defn get-data-part [#^ str table #^ int page #^ int num]

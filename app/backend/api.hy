@@ -38,6 +38,9 @@
   "" 
   get-author :methods ["GET"])
 (author_router.add_api_route 
+  "/joined" 
+  get-author-all :methods ["GET"])
+(author_router.add_api_route 
   "/{author_id}" 
   update-author :methods ["PUT"])
 (author_router.add_api_route 

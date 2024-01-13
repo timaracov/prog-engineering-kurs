@@ -167,4 +167,16 @@ tr:last-child th:last-child {
 }
 #create-row-block {
   display: none;
+  position: fixed;
+  z-index: 1;
+  padding: 25px;
+  top: 0;
+  left: 35%;
+  width: 500px;
+  background-color: #eee;
+}
+
+.islct {
+	width: 507px;
+	margin-bottom: 10px;
 }
