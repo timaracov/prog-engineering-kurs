@@ -23,10 +23,10 @@
               <option value="10">10</option>
               <option value="25">25</option>
             </select>
-            <select id="slct">
-              <option value="По автору">По автору</option>
-              <option value="По отделу">По отделу</option>
-              <option value="По документу">По документу</option>
+            <select id="slct" onChange="setSorting(this.value)">
+              <option value="author_id">По автору</option>
+              <option value="department_id">По отделу</option>
+              <option value="name">По документу</option>
             </select>
             <button id="sb"><i class="fa fa-sort"></i></button>
           </div>
