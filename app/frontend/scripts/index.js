@@ -6,6 +6,8 @@ let currentTableName = null;
 
 const boxContainer = document.getElementById("create-row-block");
 
+let isUserAdmin = -1;
+
 function recreateTable() {
   resetTable(displayListOfObjects);
   createTable(displayListOfObjects);
@@ -50,7 +52,8 @@ function redirectToLoginPage() {
 
   var up = new URLSearchParams(crd);
 
-  (u = up.get("u")), (p = up.get("p"));
+  (u = up.get("u")), (p = up.get("p")), (a = up.get("a"));
+  isUserAdmin = a;
 
   if (u == undefined || p == undefined) {
     red("index.html", "login.html");
@@ -102,6 +105,7 @@ function resetTable(list_of_objects) {
 }
 
 function createPaginationRow(list_of_objects) {
+  console.log("AmIAdmin", isUserAdmin)
   num_of_pages = Math.ceil(list_of_objects.length / currentPaginationNum);
 
   pag_row = document.getElementsByClassName("pagination_block")[0];
@@ -144,20 +148,24 @@ function createTable(dict_list) {
   if (dictKeys.includes("doc_id")) {
 	  dictKeys = dictKeys.filter((el) => {
 		  if (allowed.includes(el)) {
-			  console.log(el);
+			  //console.log(el);
 			  return el
 		  }
 	  })
   }
 
-  crth_header = document.createElement("th");
-  crth_header.classList.add("crth");
-  crth_header.innerHTML = '<input id="cb" data-action="tr_add" class="crud_c" type="button" name="create" value="+">';
 
-  console.log("DL", dict_list, "DK", dictKeys, currentTableName);
-  crth_header.addEventListener("click", () => addBox(dictKeys, currentTableName));
+  if (isUserAdmin == 1) {
+	  console.log("wtf", isUserAdmin);
+	  crth_header = document.createElement("th");
+	  crth_header.classList.add("crth");
+	  crth_header.innerHTML = '<input id="cb" data-action="tr_add" class="crud_c" type="button" name="create" value="+">';
+	  crth_header.addEventListener("click", () => addBox(dictKeys, currentTableName));
+	  tr_header.appendChild(crth_header);
+  }
 
-  tr_header.appendChild(crth_header);
+  //console.log("DL", dict_list, "DK", dictKeys, currentTableName);
+
   table_el.appendChild(tr_header);
 
   const slice_from = Number(currentPaginationPage) * Number(currentPaginationNum);
@@ -184,15 +192,18 @@ function createTable(dict_list) {
 
     ui_th = document.createElement("th");
     ui_th.classList.add("crth");
-    ui_th.innerHTML = `<input id="cb" data-action="tr_update" class="crud_u" type="button" name="update" value="+"><input id="cb" data-action="tr_delete" class="crud_d" type="button" name="delete" value="-">`;
+	if (isUserAdmin == 1) {
+		ui_th.innerHTML = `<input id="cb" data-action="tr_update" class="crud_u" type="button" name="update" value="+"><input id="cb" data-action="tr_delete" class="crud_d" type="button" name="delete" value="-">`;
 
-    const updateButton = ui_th.querySelector('[data-action="tr_update"]');
-    const deleteButton = ui_th.querySelector('[data-action="tr_delete"]');
+		const updateButton = ui_th.querySelector('[data-action="tr_update"]');
+		const deleteButton = ui_th.querySelector('[data-action="tr_delete"]');
 
-    updateButton.addEventListener("click", (event) => onUpdateClick(row_id, updateButton, event));
-    deleteButton.addEventListener("click", (event) => deleteTableRow(row_id, event));
+		updateButton.addEventListener("click", (event) => onUpdateClick(row_id, updateButton, event));
+		deleteButton.addEventListener("click", (event) => deleteTableRow(row_id, event));
 
-    tr_el.appendChild(ui_th);
+		tr_el.appendChild(ui_th);
+	}
+
     table_el.appendChild(tr_el);
   });
 }
@@ -209,10 +220,10 @@ function addBox(dictKeys, currentTableName) {
 		  selecter = createDepartmentsOptionMenu();
 		  boxContainer.append(selecter);
 	  } else if (el == "author") {
-		  console.log("addBox", el)
+		  //console.log("addBox", el)
 		  selecter = createAuthorOptionMenu();
 		  boxContainer.append(selecter);
-		  console.log(boxContainer);
+		  //console.log(boxContainer);
 	  } else {
 		  inputContainer = document.createElement("div");
 		  inputContainer.innerHTML = `<input class="islct_in" type="text" placeholder=${el} name='${el}'>`;
@@ -243,7 +254,7 @@ function submitAddRow(currentTableName) {
   data.push(obj);
 
   const url = `http://localhost:8000/api/${currentTableName}`;
-  console.log(data);
+  //console.log(data);
 
   (async () => {
     const query = await fetch(url, {
@@ -268,7 +279,7 @@ function submitAddRow(currentTableName) {
     }
   })();
 
-  console.log(data);
+  //console.log(data);
 }
 
 function onUpdateClick(row_id, updateButton, event) {
@@ -343,7 +354,7 @@ function getDocuments() {
 
   fetch(url, { method: "GET" }).then((resp) => {
     resp.json().then((d) => {
-      console.log(d);
+      //console.log(d);
       displayListOfObjects = d;
       recreateTable();
     });
@@ -356,7 +367,7 @@ function getAuthors() {
 
   fetch(url, { method: "GET" }).then((resp) => {
     resp.json().then((d) => {
-      console.log(d);
+      //console.log(d);
       displayListOfObjects = d;
       recreateTable();
     });
@@ -369,7 +380,7 @@ function getDepartments() {
 
   fetch(url, { method: "GET" }).then((resp) => {
     resp.json().then((d) => {
-      console.log(d);
+      //console.log(d);
       displayListOfObjects = d;
       recreateTable();
     });

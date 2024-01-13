@@ -112,13 +112,13 @@
 
 ;; AUTH
 (defn login-user [#^ str username #^ str password]
-  (print username password)
   (setv user (get-data-by-key 
                "users" "username" f"'{username}'" 0 1))
+  (print user)
   (if (= user [])
       (setv resp (JSONResponse (dict :message "Not found") :status_code 404))
       (if (= password (get (get user 0) 3))
-            (setv resp (JSONResponse (dict :message "ok")))
+            (setv resp (JSONResponse (dict :message "ok" :is_admin (get (get user 0) 2))))
             (setv resp (JSONResponse (dict :message "Bad credentials") :status_code 400))))
 
   resp)

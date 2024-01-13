@@ -14,6 +14,7 @@ function loginUser() {
 				var p = new URLSearchParams();
 				p.append("u", username_el)
 				p.append("p", password_el)
+				p.append("a", d.is_admin)
 				document.cookie = "crd="+p.toString()
 				let current_loc = window.location.href;
 				window.location.href = current_loc.replace("login.html", "index.html")
