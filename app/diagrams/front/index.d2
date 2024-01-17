@@ -1,0 +1,635 @@
+#st: start {
+#  style.border-radius: 5
+#  width: 150
+#}
+#en: end {
+#  style.border-radius: 5
+#  width: 150
+#}
+#st1: start {
+#  style.border-radius: 5
+#  width: 150
+#}
+#en1: end {
+#  style.border-radius: 5
+#  width: 150
+#}
+#st2: start {
+#  style.border-radius: 5
+#  width: 150
+#}
+#en2: end {
+#  style.border-radius: 5
+#  width: 150
+#}
+#st3: start {
+#  style.border-radius: 5
+#  width: 150
+#}
+#en3: end {
+#  style.border-radius: 5
+#  width: 150
+#}
+#st4: start {
+#  style.border-radius: 5
+#  width: 150
+#}
+#en4: end {
+#  style.border-radius: 5
+#  width: 150
+#}
+#st5: start {
+#  style.border-radius: 5
+#  width: 150
+#}
+#en5: end {
+#  style.border-radius: 5
+#  width: 150
+#}
+#st6: start {
+#  style.border-radius: 5
+#  width: 150
+#}
+#en6: start {
+#  style.border-radius: 5
+#  width: 150
+#}
+#st7: start {
+#  style.border-radius: 5
+#  width: 150
+#}
+#en7: end {
+#  style.border-radius: 5
+#  width: 150
+#}
+#st8: start {
+#  style.border-radius: 5
+#  width: 150
+#}
+#en8: end {
+#  style.border-radius: 5
+#  width: 150
+#}
+#st9: start {
+#  style.border-radius: 5
+#  width: 150
+#}
+#en9: end {
+#  style.border-radius: 5
+#  width: 150
+#}
+st10: start {
+  style.border-radius: 5
+  width: 150
+}
+en10: end {
+  style.border-radius: 5
+  width: 150
+}
+st11: start {
+  style.border-radius: 5
+  width: 150
+}
+en11: end {
+  style.border-radius: 5
+  width: 150
+}
+st12: start {
+  style.border-radius: 5
+  width: 150
+}
+en12: end {
+  style.border-radius: 5
+  width: 150
+}
+st13: start {
+  style.border-radius: 5
+  width: 150
+}
+en13: end {
+  style.border-radius: 5
+  width: 150
+}
+st14: start {
+  style.border-radius: 5
+  width: 150
+}
+en14: end {
+  style.border-radius: 5
+  width: 150
+}
+st15: start {
+  style.border-radius: 5
+  width: 150
+}
+en15: end {
+  style.border-radius: 5
+  width: 150
+}
+
+
+#######################################
+#
+#rt: |go
+#  resetTable(displayListOfObjects);
+#  createTable(displayListOfObjects);
+#  createPaginationRow(displayListOfObjects);
+#|
+#
+#st -> rt
+#rt -> en
+#
+#######################################
+#
+#sbb: |go 
+#  displayListOfObjects = displayListOfObjects.sort((l, r) => (l[key] > r[key] ? 1 : -1));
+#|
+#
+#st1 -> sbb
+#sbb -> en1
+#
+##
+##function setSorting(key) {
+##	console.log("SORT", key);
+##	const url = `http://localhost:8000/api/documents?sort_by=${key}?sort_key=`;
+##    //fetch(url, { method: "GET" }).then((resp) => {
+##    //  resp.json().then((d) => {
+##	//	console.log(d);
+##    //    displayListOfObjects = d;
+##    //    recreateTable();
+##    //  });
+##    //});
+##}
+#
+#######################################
+#
+#spn: |go
+#  currentPaginationNum = num;
+#  currentPaginationPage = 0;
+#  recreateTable();
+#|
+#
+#st2 -> spn
+#spn -> en2
+#
+#######################################
+#
+#spp: |go
+#  currentPaginationPage = pag_page;
+#  recreateTable();
+#|
+#
+#st3 -> spp --> en3
+#
+#######################################
+#
+#red: |go
+#  let current_loc = window.location.href;
+#  window.location.href = current_loc.replace(from, to);
+#|
+#
+#st4 -> red -> en4
+#
+#######################################
+#
+#rtlp: |go
+#  try {
+#    var crd = document.cookie
+#      .split("; ")
+#      .find((row) => row.startsWith("crd"))
+#      .substring(4);
+#  } catch {
+#    red("index.html", "login.html");
+#  }
+#
+#  var up = new URLSearchParams(crd);
+#
+#  (u = up.get("u")), (p = up.get("p")), (a = up.get("a"));
+#  isUserAdmin = a;
+#|
+#
+#rtlpif: "(u == undefined || p == undefined)" {
+#  shape: diamond
+#}
+#
+#rtlifb: |go
+#  red("index.html", "login.html");
+#|
+#
+#st5 -> rtlp -> rtlpif
+#rtlpif -> rtlifb: yes
+#rtlpif -> en5: no
+#
+#######################################
+#
+#caom: |go
+#	const url = "http://localhost:8000/api/authors";
+#	selecter = document.createElement("select")
+#	selecter.name = "author";
+#	selecter.classList.add("islct");
+#    (async () => {
+#      const query = await fetch(url);
+#      const res = await query.json();
+#      Array.from(res).forEach((e) => {
+#        op = document.createElement("option");
+#        op.value = e.author_id;
+#        op.innerHTML = e.fullname;
+#        selecter.appendChild(op);
+#      })
+#    })();
+#	return selecter;
+#|
+#
+#st6 -> caom -> en6
+#
+#
+#######################################
+#
+#rest: |go
+#  table_el = document.getElementById("data__table");
+#  table_el.replaceChildren([]);
+#  tr_row = document.createElement("tr");
+#  tr_row.classList.add("header_tr");
+#  table_el.appendChild(tr_row);
+#|
+#
+#st7 -> rest -> en7
+#
+#######################################
+#
+#cpr: |go
+#  console.log("AmIAdmin", isUserAdmin)
+#  num_of_pages = Math.ceil(list_of_objects.length / currentPaginationNum);
+#
+#  pag_row = document.getElementsByClassName("pagination_block")[0];
+#  last_button = document.getElementsByClassName("pag_ctrl_b")[1];
+#
+#  pag_num_buttons = Array.from(document.getElementsByClassName("pag_num_b"));
+#  pag_num_buttons.forEach((b) => {b.remove()});
+#  Array(num_of_pages)
+#    .fill(0)
+#    .map((_, i) => i + 1)
+#    .forEach((num) => {
+#      but = document.createElement("button");
+#      but.onclick = function () {
+#        setPaginationPage(num - 1);
+#      };
+#      but.classList.add("pag_num_b");
+#      but.innerHTML = num;
+#      pag_row.appendChild(but);
+#    });
+#|
+#
+#st8 -> cpr -> en8
+#
+#######################################
+
+# createTable: |go
+#   table_el = document.getElementById("data__table");
+#   let dictKeys = [];
+# 
+#   tr_header = document.createElement("tr");
+#   tr_header.classList.add("header_tr");
+# |
+# 
+# createTableFor: "(var key in dict_list[0])" {
+#   shape: hexagon
+# }
+# 
+# createTableForBody: |go
+#     dictKeys.push(key);
+#     th = document.createElement("th");
+#     th.innerHTML = key;
+#     tr_header.appendChild(th);
+# |
+# 
+# createTableBody1: |go 
+#   const allowed = ["doc_id", "name", "folder", "version", "author"]
+# |
+# 
+# createTableCond1: "(dictKeys.includes('doc_id'))" {
+#   shape: diamond
+# }
+# 
+# createTableCond1Body: |go
+#   dictKeys = dictKeys.filter((el) => {
+#     if (allowed.includes(el)) {
+#       //console.log(el);
+#       return el
+#     }
+#   })
+# |
+# 
+# createTableCond2: "(isUserAdmin == 1)" {
+#   shape: diamond
+# }
+# 
+# createTableCond2Body: |go
+#   console.log("wtf", isUserAdmin);
+#   crth_header = document.createElement("th");
+#   crth_header.classList.add("crth");
+#   crth_header.innerHTML = '<input id="cb" data-action="tr_add" class="crud_c" type="button" name="create" value="+">';
+#   crth_header.addEventListener("click", () => addBox(dictKeys, currentTableName));
+#   tr_header.appendChild(crth_header);
+# |
+# 
+# createTableBody2: ||go
+#   table_el.appendChild(tr_header);
+# 
+#   const slice_from = Number(currentPaginationPage) * Number(currentPaginationNum);
+#   const slice_to = slice_from + Number(currentPaginationNum);
+# 
+#   dict_list.slice(slice_from, slice_to).forEach((o) => {
+#     let row_id = null;
+# 
+#     o.doc_id ? (row_id = o.doc_id) : null;
+#     o.author_id ? (row_id = o.author_id) : null;
+#     o.department_id ? (row_id = o.department_id) : null;
+# 
+#     tr_el = document.createElement("tr");
+#     tr_el.classList.add("row_tr");
+# 
+#     for (var key in o) {
+#       const customClass = (key === "doc_id") | (key === "author_id") | (key === "department_id") ? "th_cell_id" : null;
+# 
+#       th_el = document.createElement("th");
+#       th_el.classList.add("th_cell_id");
+#       th_el.innerHTML = `<textarea data-id=${customClass} data-key=${key} disabled class="th_cell ${customClass}" value="${o[key]}">${o[key]}</textarea>`;
+#       tr_el.appendChild(th_el);
+#     }
+# 
+#     ui_th = document.createElement("th");
+#     ui_th.classList.add("crth");
+# ||
+# 
+# createTableCond3: "(isUserAdmin == 1)" {
+#   shape: diamond
+# }
+# 
+# createTableCond3Body: |go
+#   ui_th.innerHTML = `<input id="cb" data-action="tr_update" class="crud_u" type="button" name="update" value="+"><input id="cb" data-action="tr_delete" class="crud_d" type="button" name="delete" value="-">`;
+# 
+#   const updateButton = ui_th.querySelector('[data-action="tr_update"]');
+#   const deleteButton = ui_th.querySelector('[data-action="tr_delete"]');
+# 
+#   updateButton.addEventListener("click", (event) => onUpdateClick(row_id, updateButton, event));
+#   deleteButton.addEventListener("click", (event) => deleteTableRow(row_id, event));
+# 
+#   tr_el.appendChild(ui_th);
+# |
+# 
+# createTableBody3: |go
+#   table_el.appendChild(tr_el);
+# |
+# 
+# st9 -> createTable -> createTableFor
+# createTableFor -> createTableForBody
+# createTableFor -> createTableBody1 -> createTableCond1
+# createTableCond1 -> createTableCond1Body: yes
+# createTableCond1 -> createTableBody2: no
+# createTableBody2 -> createTableCond2
+# createTableCond2 -> createTableCond2Body: yes
+# createTableCond2 -> createTableBody3: no
+# createTableBody3 -> createTableCond3
+# createTableCond3 -> createTableCond3Body: yes
+# createTableCond3 -> en9
+# createTableBody3 -> en9
+# 
+
+######################################
+
+# abif1: "(boxContainer.style.display === 'block')" {
+#   shape:diamond
+# }
+# 
+# abif1b: ||go
+#   boxContainer.style.display = "none";
+#   boxContainer.innerHTML = "";
+# ||
+# 
+# abb1: ||go
+#   boxContainer.style.display = "block";
+#   dictKeys.forEach((el) => {
+# ||
+# 
+# abb1if: "(el == 'department')" {
+#   shape:diamond
+# }
+# 
+# abb1ifb: ||go
+#   selecter = createDepartmentsOptionMenu();
+#   boxContainer.append(selecter);
+# ||
+# 
+# abb1ifb1if1: "(el == 'author')" {
+#   shape:diamond
+# }
+# 
+# abb1ifb1if1b: ||go
+#   selecter = createAuthorOptionMenu();
+#   boxContainer.append(selecter);
+# ||
+# 
+# abb1ifb1if1belse: ||go
+#   inputContainer = document.createElement("div");
+#   inputContainer.innerHTML = `<input class="islct_in" type="text" placeholder=${el} name='${el}'>`;
+#   boxContainer.append(inputContainer);
+# ||
+# 
+# abrest: ||go
+#   buttonContainer = document.createElement("div");
+#   buttonContainer.innerHTML = `<input type="button" value="add"/>`;
+#   buttonContainer.classList.add("crb");
+#   buttonContainer.addEventListener("click", () => submitAddRow(currentTableName));
+#   boxContainer.append(buttonContainer);
+# ||
+# 
+# st10 -> abif1
+# abif1 -> abif1b: yes
+# abif1 -> abb1: no
+# abb1 -> abb1if
+# abb1if -> abb1ifb: yes
+# abb1if -> abb1ifb1if1: no
+# abb1ifb1if1 -> abb1ifb1if1b: yes
+# abb1ifb1if1-> abb1ifb1if1belse: no
+# abb1ifb1if1belse -> abrest
+# abrest -> en10
+
+#######################################################################
+
+
+# submitAddRow: ||go
+#   const selectInputs = boxContainer.querySelectorAll("select");
+#   const allAddInputs = boxContainer.querySelectorAll("input[type='text']");
+# 
+#   const elements = Array.from(selectInputs).concat(Array.from(allAddInputs))
+# 
+#   const data = [];
+#   let obj = {};
+# 
+#   elements.forEach((el) => {obj[el.getAttribute("name")] = el.value;});
+#   data.push(obj);
+# 
+#   const url = `http://localhost:8000/api/${currentTableName}`;
+# 
+#   (async () => {
+#     const query = await fetch(url, {
+#       headers: {
+#         Accept: "application/json",
+#         "Content-Type": "application/json",
+#       },
+#       method: "POST",
+#       body: JSON.stringify(data[0]),
+#     });
+# 
+#     const res = await query.json();
+# ||
+# 
+# submitAddRowIF: "(res.message == 'ok')" {
+#   shape: diamond
+# }
+# 
+# submitAddRowIFBody: ||go
+#   alert("Data saved");
+# ||
+# 
+# submitAddRowELSEIF: "(res.detail == null)" {
+#   shape: diamond
+# }
+# 
+# submitAddRowELSEIFBody: ||go
+# 	alert(`Error:\n${JSON.stringify(res.message)}`);
+# ||
+# 
+# submitAddRowELSEIFELSE: ||go
+# 	alert(`Error:\n${JSON.stringify(res.detail[0].msg)}`);
+# ||
+# 
+# st11 -> submitAddRow -> submitAddRowIF
+# submitAddRowIF -> submitAddRowIFBody: yes
+# submitAddRowIF -> submitAddRowELSEIF: no
+# submitAddRowELSEIF -> submitAddRowELSEIFBody: yes
+# submitAddRowELSEIF -> submitAddRowELSEIFELSE: no
+# submitAddRowELSEIFELSE -> en11
+
+
+# deleteTableRow: ||go
+#   const row_node = event.target.parentElement.parentElement;
+# ||
+# 
+# deleteTableRowIF: "(row_node.className === 'row_tr')" {
+#   shape: diamond
+# }
+# 
+# deleteTableRowIFBody: ||go
+#   const url = `http://localhost:8000/api/${currentTableName}/${row_id}`;
+# 
+#   fetch(url, { method: "DELETE" })
+#     .then((resp) => {
+#       row_node.remove();
+#     })
+#     .catch((error) => console.log(error));
+# ||
+# 
+# st12 -> deleteTableRow -> deleteTableRowIF
+# deleteTableRowIF -> deleteTableRowIFBody: yes
+# deleteTableRowIF -> en12: no
+
+
+# getDocuments: ||go
+#   const url = "http://localhost:8000/api/documents/joined";
+#   currentTableName = "documents";
+# 
+#   fetch(url, { method: "GET" }).then((resp) => {
+#     resp.json().then((d) => {
+#       //console.log(d);
+#       displayListOfObjects = d;
+#       recreateTable();
+#     });
+#   });
+# ||
+# 
+# st13 -> getDocuments -> en13
+
+# onStartup: ||go
+#   redirectToLoginPage();
+#   createTable(displayListOfObjects);
+#   createPaginationRow(displayListOfObjects);
+#   getDocuments();
+# ||
+# 
+# st14 -> onStartup -> en14
+
+
+onUpdateClick: ||go
+  const row_node = event.target.parentElement.parentElement;
+  const allInputs = row_node.querySelectorAll("[data-id]");
+||
+
+onUpdateClickIf: "(updateButton.value === '+')" {
+  shape: diamond
+}
+
+onUpdateClickIfBody: ||go
+  allInputs.forEach((el) => {
+    if (el.getAttribute("data-id") === "null") {
+      el.removeAttribute("disabled");
+      el.style.border = "1px solid black";
+      el.style.borderRadius = "5px";
+    }
+  });
+
+  updateButton.value = "ok";
+||
+
+onUpdateClickIfElse: ||go
+  const dataArray = [];
+
+  let obj = {};
+  allInputs.forEach((el) => {
+    obj[el.getAttribute("data-key")] = el.value;
+  });
+  dataArray.push(obj);
+
+  const url = `http://localhost:8000/api/${currentTableName}/${row_id}`;
+
+  (async () => {
+    const query = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
+      body: JSON.stringify(dataArray[0]),
+    });
+
+    const res = await query.json();
+||
+
+onUpdateClickIfElseIf: "(res.message == 'ok')" {
+  shape: diamond
+}
+
+onUpdateClickIfElseIfBody: ||go
+  alert("Data saved");
+
+  allInputs.forEach((el) => {
+    el.setAttribute("disabled", true);
+    el.style.border = "0";
+  });
+
+  updateButton.value = "+";
+||
+
+onUpdateClickIfElseIfElse: ||go
+  alert("Error");
+||
+
+st14 -> onUpdateClick -> onUpdateClickIf
+onUpdateClickIf -> onUpdateClickIfBody: yes
+onUpdateClickIf -> onUpdateClickIfElse: no
+onUpdateClickIfElse -> onUpdateClickIfElseIf
+onUpdateClickIfElseIf -> onUpdateClickIfElseIfBody: yes
+onUpdateClickIfElseIf -> onUpdateClickIfElseIfElse: no
+onUpdateClickIfElseIfElse -> en14
+

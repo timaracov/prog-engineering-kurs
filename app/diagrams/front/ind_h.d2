@@ -1,0 +1,154 @@
+# st8: start {
+#   style.border-radius: 5
+#   width: 150
+# }
+en8: end {
+  style.border-radius: 5
+  width: 150
+}
+# 
+# ######################################
+# 
+# createTable: |go
+#   table_el = document.getElementById("data__table");
+#   let dictKeys = [];
+# 
+#   tr_header = document.createElement("tr");
+#   tr_header.classList.add("header_tr");
+# |
+# 
+# createTableFor: "(var key in dict_list[0])" {
+#   shape: hexagon
+# }
+# 
+# createTableForBody: |go
+#     dictKeys.push(key);
+#     th = document.createElement("th");
+#     th.innerHTML = key;
+#     tr_header.appendChild(th);
+# |
+# 
+# createTableBody1: |go 
+#   const allowed = ["doc_id", "name", "folder", "version", "author"]
+# |
+# 
+# createTableCond1: "(dictKeys.includes('doc_id'))" {
+#   shape: diamond
+# }
+# 
+# createTableCond1Body: |go
+#   dictKeys = dictKeys.filter((el) => {
+#     if (allowed.includes(el)) {
+#       //console.log(el);
+#       return el
+#     }
+#   })
+# |
+
+createTableCond2: "(isUserAdmin == 1)" {
+  shape: diamond
+}
+
+ createTableCond2Body: |go
+   console.log("wtf", isUserAdmin);
+   crth_header = document.createElement("th");
+   crth_header.classList.add("crth");
+   crth_header.innerHTML = '<input id="cb" data-action="tr_add" class="crud_c" type="button" name="create" value="+">';
+   crth_header.addEventListener("click", () => addBox(dictKeys, currentTableName));
+   tr_header.appendChild(crth_header);
+ |
+ 
+# createTableBody2: ||go
+#   table_el.appendChild(tr_header);
+# 
+#   const slice_from = Number(currentPaginationPage) * Number(currentPaginationNum);
+#   const slice_to = slice_from + Number(currentPaginationNum);
+# 
+#   dict_list.slice(slice_from, slice_to).forEach((o) => {
+#     let row_id = null;
+# 
+#     o.doc_id ? (row_id = o.doc_id) : null;
+#     o.author_id ? (row_id = o.author_id) : null;
+#     o.department_id ? (row_id = o.department_id) : null;
+# 
+#     tr_el = document.createElement("tr");
+#     tr_el.classList.add("row_tr");
+# ||
+
+# createTableBody2For: "(var key in o)" {
+#   shape: hexagon
+# }
+# 
+# createTableBody2ForBody: ||go 
+#   const customClass = (key === "doc_id") | (key === "author_id") | (key === "department_id") ? "th_cell_id" : null;
+# 
+#   th_el = document.createElement("th");
+#   th_el.classList.add("th_cell_id");
+#   th_el.innerHTML = `<textarea data-id=${customClass} data-key=${key} disabled class="th_cell ${customClass}" value="${o[key]}">${o[key]}</textarea>`;
+#   tr_el.appendChild(th_el);
+# ||
+# 
+ createTableBody22: ||go
+     ui_th = document.createElement("th");
+     ui_th.classList.add("crth");
+ ||
+ 
+ createTableCond3: "(isUserAdmin == 1)" {
+   shape: diamond
+ }
+ 
+ createTableCond3Body: |go
+   ui_th.innerHTML = `<input id="cb" data-action="tr_update" class="crud_u" type="button" name="update" value="+"><input id="cb" data-action="tr_delete" class="crud_d" type="button" name="delete" value="-">`;
+ 
+   const updateButton = ui_th.querySelector('[data-action="tr_update"]');
+   const deleteButton = ui_th.querySelector('[data-action="tr_delete"]');
+ 
+   updateButton.addEventListener("click", (event) => onUpdateClick(row_id, updateButton, event));
+   deleteButton.addEventListener("click", (event) => deleteTableRow(row_id, event));
+ 
+   tr_el.appendChild(ui_th);
+ |
+ 
+ createTableBody3: |go
+   table_el.appendChild(tr_el);
+ |
+# 
+# connector: 1 {
+#   shape: circle
+#   style: {
+#     font-size: 32
+#   }
+# }
+connector2: 1 {
+  shape: circle
+  style: {
+    font-size: 32
+  }
+}
+# 
+# st8 -> createTable -> createTableFor
+# createTableFor -> createTableForBody
+# createTableForBody -> createTableFor
+# createTableFor -> createTableBody1 -> createTableCond1
+# 
+# createTableCond1 -> createTableCond1Body: yes
+# createTableCond1 -> createTableBody2: no
+# 
+# createTableBody2 -> createTableBody2For -> createTableBody2ForBody
+# createTableBody2ForBody -> createTableBody2For 
+# 
+# createTableBody2For -> connector 
+connector2 -> createTableBody22
+createTableBody22 -> createTableCond2
+
+createTableCond2 -> createTableCond2Body: yes
+createTableCond2 -> createTableBody3: no
+
+createTableBody3 -> createTableCond3
+createTableCond3 -> createTableCond3Body: yes
+createTableCond3 -> en8
+
+createTableBody3 -> en8
+# 
+# 
+# ######################################

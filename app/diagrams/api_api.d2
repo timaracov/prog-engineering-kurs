@@ -1,0 +1,47 @@
+st: start {
+  style.border-radius: 5
+  width: 150
+}
+en: end {
+  style.border-radius: 5
+  width: 150
+}
+st1: start {
+  style.border-radius: 5
+  width: 150
+}
+en1: end {
+  style.border-radius: 5
+  width: 150
+}
+
+####
+ra: |clojure
+  (setv api (FastAPI))
+  (api.add_middleware 
+  	CORSMiddleware
+	:allow_origins ["*"]
+	:allow_credentials True
+	:allow_methods ["*"]
+	:allow_headers ["*"])
+  (root.include_router docrouter)
+  (root.include_router author_router)
+  (root.include_router department_router)
+  (root.include_router auth_router)
+  (api.include_router root)
+  (run api))
+|
+
+
+st -> ra
+ra -> en
+####
+
+
+main: |clojure
+  (create-tables)
+  (run-api)
+|
+
+st1 -> main
+main -> en1

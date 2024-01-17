@@ -1,0 +1,411 @@
+st: start {
+  style.border-radius: 5
+  width: 150
+}
+en: end {
+  style.border-radius: 5
+  width: 150
+}
+
+st1: start {
+  style.border-radius: 5
+  width: 150
+}
+en1: end {
+  style.border-radius: 5
+  width: 150
+}
+
+st2: start {
+  style.border-radius: 5
+  width: 150
+}
+en2: end {
+  style.border-radius: 5
+  width: 150
+}
+
+st3: start {
+  style.border-radius: 5
+  width: 150
+}
+en3: end {
+  style.border-radius: 5
+  width: 150
+}
+
+st4: start {
+  style.border-radius: 5
+  width: 150
+}
+en4: end {
+  style.border-radius: 5
+  width: 150
+}
+
+st5: start {
+  style.border-radius: 5
+  width: 150
+}
+en5: end {
+  style.border-radius: 5
+  width: 150
+}
+
+st6: start {
+  style.border-radius: 5
+  width: 150
+}
+en6: end {
+  style.border-radius: 5
+  width: 150
+}
+
+st7: start {
+  style.border-radius: 5
+  width: 150
+}
+en7: end {
+  style.border-radius: 5
+  width: 150
+}
+
+st8: start {
+  style.border-radius: 5
+  width: 150
+}
+en8: end {
+  style.border-radius: 5
+  width: 150
+}
+
+st9: start {
+  style.border-radius: 5
+  width: 150
+}
+en9: end {
+  style.border-radius: 5
+  width: 150
+}
+
+st10: start {
+  style.border-radius: 5
+  width: 150
+}
+en10: end {
+  style.border-radius: 5
+  width: 150
+}
+
+######################################
+
+gc: |clojure
+  (setv conn (sql.connect "src.db"))
+  conn
+|
+
+gcr: |clojure
+  (setv con (get-con))
+  (con.cursor)
+|
+
+gaj: |clojure
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv query (+
+      "select author_id, "
+             "fullname, "
+             "education, "
+             "university, "
+             "departments.department_id, "
+             "departments.name, "
+             "departments.location, "
+             "departments.head, "
+             "departments.phone "
+      "from author join departments on departments.department_id = author.department"))
+  (cur.execute query)
+  (setv tuple-data (cur.fetchall))
+  (setv res [])
+|
+
+gajf: "for [x tuple-data]" {
+  shape: hexagon
+}
+
+gajfb: |clojure
+    ((. res append) 
+     (dict 
+       :author_id (get x 0)
+       :fullname (get x 1)
+       :education (get x 2)
+       :university (get x 3)
+       :department_id (get x 4)
+       :department_name (get x 5)
+       :department_location (get x 6)
+       :department_head (get x 7)
+       :department_phone (get x 8))))
+|
+
+gajfres: |clojure 
+  res
+|
+
+
+####################################################
+
+gdj: |clojure
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv query (+
+      "select doc_id, "
+             "docs.name as name, "
+             "folder, "
+             "version, "
+             "fullname, "
+             "education, "
+             "university, "
+             "departments.name as dep_name, "
+             "location, "
+             "head, "
+             "author.author_id as author, "
+             "phone "
+      "from docs join author on author.author_id = docs.author "
+      "join departments on departments.department_id = author.department"))
+  (cur.execute query)
+  (setv tuple-data (cur.fetchall))
+  (setv res [])
+|
+gdjf: "for [x tuple-data]" {
+  shape: hexagon
+}
+
+gdjfb: |clojure
+  ((. res append) 
+   (dict 
+     :doc_id (get x 0)
+     :name (get x 1)
+     :folder (get x 2)
+     :version (get x 3)
+     :fullname (get x 4)
+     :education (get x 5)
+     :univercity (get x 6)
+     :dep_name (get x 7)
+     :location (get x 8)
+     :head (get x 9)
+     :author (get x 10)
+     :phone (get x 11))))
+|
+
+gdjfr: |clojure
+  res
+|
+
+####################################################
+
+gdp: |clojure
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv query f"select * from {table} limit {num} offset {page}")
+  (cur.execute query)
+  (setv tuple-data (cur.fetchall))
+  tuple-data
+|
+
+####################################################
+
+
+gdbk: |clojure
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv query (+
+    f"select * from {table} "
+    f"where {key} = {data-value} "
+    f"order by {key} "
+    f"limit {num} "
+    f"offset {page}"))
+  (cur.execute query)
+  (setv tuple-data (cur.fetchall))
+  tuple-data
+|
+
+####################################################
+
+ttm: |clojure
+  (setv res (dict))
+  (setv kvs ((. (. model model_fields) items)))
+  (setv enkvs (enumerate kvs))
+|
+
+ttmf: "for [en_pair enkvs]" {
+  shape: hexagon
+}
+
+ttmfb: |clojure
+  (setv n (get en_pair 0))
+  (setv k (get (get en_pair 1) 0))
+  (assoc res k (get data n)))
+|
+
+ttmr: |clojure
+  res
+|
+  
+
+####################################################
+
+
+ar: |clojure
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv record-keys 
+    (+ "("
+       ((. ", " join) 
+         (tuple 
+           ((.  (. mr model_fields) keys))))
+       ")"))
+  (setv query (+
+    f"insert into {table} {record-keys} values ("
+    ((. ", " join)
+      (lfor el 
+            (tuple ((. ((. mr model_dump)) values)))
+       (if (= (isinstance el int) True)
+             (str el)
+             f"'{el}'")))
+    ")"))
+  (cur.execute query)
+  (con.commit)
+|
+
+#####################################################
+
+ur: |clojure
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv rstr "")
+  (setv kvs ((. ((. mr model_dump)) items)))
+|
+
+urf: "for [pair kvs]" {
+  shape: hexagon
+}
+
+urfb: |clojure
+  (setv v (get pair 1))
+  (setv k (get pair 0))
+  (setv rstr (+
+      rstr
+      f"{k} = "
+      (if (= (isinstance v int) True)
+          f"{v}, " f"'{v}', "))))
+|
+
+urr: |clojure
+  (setv query (+
+    f"update {table} set " 
+    (cut rstr 0 -2)
+    f" where {record_key} = {record_id}"))
+  (cur.execute query)
+  (con.commit))
+|
+
+####################################################
+
+dr: |clojure
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv query f"delete from {table} where {record_key} = {record_id}")
+  (cur.execute query)
+  (con.commit)
+|
+
+####################################################
+
+ct: |clojure
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (cur.execute (+
+    "create table if not exists users("
+      "user_id integer unique primary key not null,"
+      "username text unique not null,"
+      "is_admin integer not null default 0 check(is_admin < 2 AND is_admin > -1),"
+      "password text not null"
+    ")"))
+  (cur.execute (+
+    "create table if not exists departments("
+      "department_id integer unique primary key not null,"
+      "name text not null,"
+      "location text not null,"
+      "head text not null,"
+      "phone text not null"
+    ")"))
+  (cur.execute (+
+    "create table if not exists author("
+      "author_id integer unique primary key not null,"
+      "fullname text not null,"
+      "education text not null,"
+      "university text not null,"
+      "department integer,"
+      "foreign key(department) references departments(department_id)"
+    ")"))
+  (cur.execute (+
+    "create table if not exists docs("
+      "doc_id integer unique primary key not null,"
+      "name text not null unique,"
+      "folder text not null,"
+      "version text not null,"
+      "author integer,"
+      "foreign key(author) references authors(author_id)"
+    ")")))
+|
+
+####################################################
+
+ st -> gc
+ gc -> en
+ 
+ st1 -> gcr
+ gcr -> en1
+ 
+ st2 -> gaj
+ gaj -> gajf
+ gajf -> gajfb
+ gajfb -> gajf
+ gajf -> gajfres
+ gajfres -> en2
+ 
+ st3 -> gdj
+ gdj -> gdjf
+ gdjf -> gdjfb
+ gdjfb -> gdjf
+ gdjf -> gdjfr
+ gdjfr -> en3
+ 
+ st4 -> gdp
+ gdp -> en4
+ 
+ st5 -> gdbk
+ gdbk -> en5
+ 
+ st6 -> ttm 
+ ttm -> ttmf
+ ttmf -> ttmfb
+ ttmfb -> ttmf
+ ttmf -> ttmr
+ ttmr -> en6
+ 
+ st7 -> ar
+ ar -> en7
+
+st8 ->  ur 
+ur ->   urf
+urf ->  urfb
+urfb -> urf
+urf ->  urr
+urr ->  en8
+
+
+st9 -> dr
+dr -> en9
+
+st10 -> ct
+ct -> en10

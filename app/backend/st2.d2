@@ -1,0 +1,43 @@
+db: "db.hy"
+gc: "get-con"
+gcr: "get-cur"
+gaj: "get-authors-joined"
+gdj: "get-docs-joined"
+gdp: "get-data-part"
+gdb: "get-data-by-key"
+ttm: "tuple-to-model"
+ar: "add-record"
+ur: "update-record"
+dr: "delete-record"
+ct: "create-tables"
+
+db -> gc
+db -> gcr
+db -> gaj
+db -> gdj
+db -> gdp
+db -> gdb
+db -> ttm
+db -> ar
+db -> ur
+db -> dr
+db -> ct
+
+hn: "handlers.hy"
+hn -> prep-d
+hn -> add-docs
+hn -> get-docs-all
+hn -> get_docs
+hn -> update_doc
+hn -> delete_doc
+hn -> add-author
+hn -> get-author-all
+hn -> get-author
+hn -> update-author
+hn -> delete-author
+hn -> add-department
+hn -> get-department
+hn -> update-department
+hn -> delete-department
+hn -> login-user
+hn -> login-admin

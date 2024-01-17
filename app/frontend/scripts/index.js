@@ -14,19 +14,13 @@ function recreateTable() {
   createPaginationRow(displayListOfObjects);
 }
 
-function changeDataSource(name) {
-  displayListOfObjects = name;
-  currentPaginationPage = 0;
-  recreateTable();
-}
-
 function sortByKey(key) {
   displayListOfObjects = displayListOfObjects.sort((l, r) => (l[key] > r[key] ? 1 : -1));
 }
 
 function setSorting(key) {
 	console.log("SORT", key);
-	//const url = `http://localhost:8000/api/documents?sort_by=${key}`;
+	const url = `http://localhost:8000/api/documents?sort_by=${key}?sort_key=`;
     //fetch(url, { method: "GET" }).then((resp) => {
     //  resp.json().then((d) => {
 	//	console.log(d);

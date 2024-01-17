@@ -63,10 +63,6 @@
 (auth_router.add_api_route
   "/login/user"
   login-user :methods ["POST"])
-(auth_router.add_api_route
-  "/login/admin"
-  login-admin :methods ["POST"])
-
 
 (defn run-api []
   (setv api (FastAPI))

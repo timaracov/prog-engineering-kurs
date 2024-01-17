@@ -1,0 +1,193 @@
+# st: start {
+#   style.border-radius: 5
+#   width: 150
+# }
+# en: end {
+#   style.border-radius: 5
+#   width: 150
+# }
+# 
+# st1: start {
+#   style.border-radius: 5
+#   width: 150
+# }
+# en1: end {
+#   style.border-radius: 5
+#   width: 150
+# }
+#  
+# st2: start {
+#   style.border-radius: 5
+#   width: 150
+# }
+# en2: end {
+#   style.border-radius: 5
+#   width: 150
+# }
+#  
+#  st3: start {
+#    style.border-radius: 5
+#    width: 150
+#  }
+#  en3: end {
+#    style.border-radius: 5
+#    width: 150
+#  }
+#  
+#  st4: start {
+#    style.border-radius: 5
+#    width: 150
+#  }
+#  en4: end {
+#    style.border-radius: 5
+#    width: 150
+#  }
+#  
+#  st5: start {
+#    style.border-radius: 5
+#    width: 150
+#  }
+#  en5: end {
+#    style.border-radius: 5
+#    width: 150
+#  }
+#  
+st6: start {
+  style.border-radius: 5
+  width: 150
+}
+en6: end {
+  style.border-radius: 5
+  width: 150
+}
+#  
+# 
+# ######################################
+# 
+# pd: |clojure
+#   (setv rd f"'{d}'")
+# |
+# 
+# pdif: "(= (. d isdecimal) True)" {
+#   shape: diamond
+# }
+# 
+# pdifb: |clojure
+#   (setv rd (int d)))
+# |
+# 
+# pdr: |clojure
+#   rd
+# |
+# 
+# st    -> pd
+# pd    -> pdif
+# pdif  -> pdifb: yes
+# pdif  -> pdr: no
+# pdifb -> pdr
+# pdr   -> en
+# 
+# 
+# ######################################
+# 
+# 
+# ad: |clojure
+#   (setv resp 
+#     (JSONResponse (dict :message "ok") :status_code 201))
+#   (try
+#     (add-record doc "docs")
+#     (except [e IntegrityError]
+#       (setv resp 
+#             (JSONResponse (dict :message (str e)) :status_code 400))))
+#   resp
+# |
+# 
+# st1 -> ad
+# ad  -> en1
+# 
+# ######################################
+# 
+#  
+# gda: |clojure
+#   (get-docs-joined)
+# |
+# 
+# st2  -> gda
+# gda  -> en2
+# 
+# 
+# ######################################
+# 
+# gd: |clojure
+#    (setv tuple-docs 
+#      (get-data-by-key
+#        "docs" sort-by.value (prep-d sort-key-value) page num))
+#    (lfor d tuple-docs
+#      (Document.model_validate 
+#        (tuple-to-model d Document)))
+# |
+# 
+# st3  -> gd
+# gd   -> en3
+# 
+# 
+# ######################################
+#  
+# ud: |clojure
+#   (update-record data "docs" "doc_id" doc_id)
+#   (JSONResponse (dict :message "ok"))
+# |
+# 
+# st4  -> ud
+# ud   -> en4
+# 
+# 
+# ######################################
+# dd: |clojure
+#   (delete-record doc_id "doc_id" "docs")
+#   (JSONResponse (dict :message "ok")))
+# |
+# 
+# st5  -> dd
+# dd   -> en5
+# 
+# ######################################
+
+
+lu: |clojure
+  (setv user (get-data-by-key 
+               "users" "username" f"'{username}'" 0 1))
+|
+
+luif: "(= user [])" {
+  shape: diamond
+}
+
+luifb: |clojure 
+  (setv resp (JSONResponse (dict :message "Not found") :status_code 404))
+|
+
+luifbif: "(= password (get (get user 0) 3))" {
+  shape: diamond
+}
+
+luifbifb: |clojure
+  (setv resp (JSONResponse (dict :message "ok" :is_admin (get (get user 0) 2))))
+  (setv resp (JSONResponse (dict :message "Bad credentials") :status_code 400))))
+|
+
+lur: |clojure
+  resp
+|
+
+st6 -> lu
+lu -> luif
+luif -> luifb: yes
+luif -> lur: no
+luifb -> luifbif
+luifbif -> luifbifb: yes
+luifbif -> lur: no
+lur -> en6
+
+
+######################################
