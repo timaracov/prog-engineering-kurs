@@ -3,6 +3,46 @@
   font-family: Monospace;
 }
 
+.modal_info {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding: 25px;
+  margin-top: 10px;
+  top: 0;
+  left: 35%;
+  width: 500px;
+  background-color: #eee;
+}
+
+#om_sort {
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  height: 20px;
+  background-color: white;
+  margin-right: 5px;
+}
+
+.main__nav {
+	width: 100%;
+	background-color: #222;
+	padding: 15px;
+}
+
+.main__nav li {
+	display: inline;
+	margin-right: 25px;
+}
+
+.main__nav a {
+	color: white;
+	text-decoration: none;
+	font-size: 20px;
+}
+.main__nav a:hover {
+	text-decoration: underline;
+}
+
 table {
   width: 100%;
   border-collapse: separate;

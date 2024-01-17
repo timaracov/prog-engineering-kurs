@@ -19,15 +19,43 @@ function sortByKey(key) {
 }
 
 function setSorting(key) {
-	console.log("SORT", key);
-	const url = `http://localhost:8000/api/documents?sort_by=${key}?sort_key=`;
-    //fetch(url, { method: "GET" }).then((resp) => {
-    //  resp.json().then((d) => {
-	//	console.log(d);
-    //    displayListOfObjects = d;
-    //    recreateTable();
-    //  });
-    //});
+	option_row = Array.from(document.getElementsByClassName("option_row"))[0]
+	menuGenerators = {
+		"author": createAuthorOptionMenu,
+		"department": createDepartmentsOptionMenu,
+		"docs.name": createDocumentsOptionMenu
+	}
+
+	optionMenu = menuGenerators[key]()
+	optionMenu.style.width = "250px"
+	optionMenu.id = "om_sort"
+
+	if (option_row.firstChild.className = "islct") {
+		option_row.removeChild(option_row.firstChild)
+	}
+	option_row.insertBefore(optionMenu, option_row.firstChild)
+}
+
+function sortTable() {
+	const key_el = document.getElementById("om_sort")
+	const by_el = Array.from(document.getElementsByClassName("sort_o"))[0]
+	const url = `http://localhost:8000/api/documents?sort_by=${by_el.value}&sort_key_value=${key_el.value}`;
+	console.log(by_el)
+    fetch(url, { method: "GET" })
+	  .then((resp) => {
+		  if (resp.ok) {
+			resp.json().then((d) => {
+			  console.log(d);
+			  displayListOfObjects = d;
+			  recreateTable();
+			});
+		  } else {
+			console.log("bad", resp)
+		  }
+	  })
+	  .catch((err) => {
+		console.log("really bad", err)
+	  });
 }
 
 function setPaginationNum(num) {
@@ -102,6 +130,24 @@ function createDepartmentsOptionMenu() {
 	return selecter;
 }
 
+function createDocumentsOptionMenu() {
+	const url = "http://localhost:8000/api/documents/joined";
+	selecter = document.createElement("select")
+	selecter.name = "docs";
+	selecter.classList.add("islct");
+    (async () => {
+        const query = await fetch(url);
+        const res = await query.json();
+		Array.from(res).forEach((e) => {
+			op = document.createElement("option");
+			op.value = e.name;
+			op.innerHTML = e.name;
+			selecter.appendChild(op);
+		})
+    })();
+	return selecter;
+}
+
 function resetTable(list_of_objects) {
   table_el = document.getElementById("data__table");
   table_el.replaceChildren([]);
@@ -110,8 +156,8 @@ function resetTable(list_of_objects) {
   table_el.appendChild(tr_row);
 }
 
+
 function createPaginationRow(list_of_objects) {
-  console.log("AmIAdmin", isUserAdmin)
   num_of_pages = Math.ceil(list_of_objects.length / currentPaginationNum);
 
   pag_row = document.getElementsByClassName("pagination_block")[0];
@@ -214,6 +260,24 @@ function createTable(dict_list) {
   });
 }
 
+function createAboutModal() {
+	modal = Array.from(document.getElementsByClassName("modal_info"))[0]
+	if (modal.style.display === "block") {
+		modal.style.display = "none";
+	} else {
+		modal.style.display = "block";
+		modal.innerHTML = `
+			<img src="./assets/me.jpeg" width="140">
+			<h1>Автор:</h1>
+			<h2>Нейенбург Тимофей Андреевич, студент группы 21-ВТ-2.</h2>
+			<hr style="margin: 10px 0;">
+			<h1>Тема:</h1>
+			<h2> «Управление конфигурацией».</h2>
+			<h2> Система для накопления, просмотра и модификации информации о формируемом документообороте в процессе проектирования программного продукту</h2>
+		`
+	}
+}
+
 function addBox(dictKeys, currentTableName) {
   if (boxContainer.style.display === "block") {
     boxContainer.style.display = "none";
@@ -284,8 +348,6 @@ function submitAddRow(currentTableName) {
 	  }
     }
   })();
-
-  //console.log(data);
 }
 
 function onUpdateClick(row_id, updateButton, event) {
@@ -360,9 +422,9 @@ function getDocuments() {
 
   fetch(url, { method: "GET" }).then((resp) => {
     resp.json().then((d) => {
-      //console.log(d);
       displayListOfObjects = d;
       recreateTable();
+	  hideSortingOptions("block")
     });
   });
 }
@@ -373,9 +435,9 @@ function getAuthors() {
 
   fetch(url, { method: "GET" }).then((resp) => {
     resp.json().then((d) => {
-      //console.log(d);
       displayListOfObjects = d;
       recreateTable();
+	  hideSortingOptions("none")
     });
   });
 }
@@ -386,11 +448,21 @@ function getDepartments() {
 
   fetch(url, { method: "GET" }).then((resp) => {
     resp.json().then((d) => {
-      //console.log(d);
       displayListOfObjects = d;
       recreateTable();
+	  hideSortingOptions("none")
     });
   });
+}
+
+function hideSortingOptions(hide) {
+	so = Array.from(document.getElementsByClassName("option_row"))[0]
+	so.style.display = hide;
+}
+
+function logout() {
+	document.cookie = "crd=; expires=Thu, 01 Jan 1970 00:00:00 UTC;"
+    red("index.html", "login.html");
 }
 
 function onStartup() {

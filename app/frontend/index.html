@@ -8,11 +8,19 @@
     <link rel="stylesheet" href="./styles/index.css" />
   </head>
   <body id="b">
+	<div class="modal_info"></div>
+	<nav class="main__nav">	
+		<ul>
+			<li><a href="#" onclick="logout()" style="margin-right: 25px">Log out</a></li>
+			<li><a href="#" onclick="createAboutModal()">About</a></li>
+			<li><a href="./manual.html" download="task.odt">Manual</a></li>
+			<!--<li><a href="../../../task.odt" download="task.odt">Manual</a></li>-->
+		</ul>
+	</nav>
     <div class="root">
       <div class="central_ui">
         <div class="tabs_row">
           <div class="doc_bts">
-            <!--<button onclick="changeDataSource(documents)">Documents</button>-->
             <button onclick="getDocuments()">Documents</button>
             <button onclick="getAuthors()">Authors</button>
             <button onclick="getDepartments()">Departments</button>
@@ -23,12 +31,12 @@
               <option value="10">10</option>
               <option value="25">25</option>
             </select>
-            <select id="slct" onChange="setSorting(this.value)">
-              <option value="author_id">По автору</option>
-              <option value="department_id">По отделу</option>
-              <option value="name">По документу</option>
+            <select id="slct" class="sort_o" onChange="setSorting(this.value)">
+              <option value="author" selected="selected">По автору</option>
+              <option value="department">По отделу</option>
+              <option value="docs.name">По документу</option>
             </select>
-            <button id="sb"><i class="fa fa-sort"></i></button>
+            <button id="sb" onclick="sortTable()"><i class="fa fa-sort"></i></button>
           </div>
         </div>
         <div class="pagination_block">

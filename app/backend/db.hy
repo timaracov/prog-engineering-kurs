@@ -83,6 +83,46 @@
        :phone (get x 11))))
   res)
 
+(defn get-docs-joined-with-key [#^ str key #^ str data-value]
+  (setv con (get-con))
+  (setv cur (con.cursor))
+  (setv query (+
+      "select doc_id, "
+             "docs.name as name, "
+             "folder, "
+             "version, "
+             "fullname, "
+             "education, "
+             "university, "
+             "departments.name as dep_name, "
+             "location, "
+             "head, "
+             "author.author_id as author, "
+             "phone "
+      "from docs join author on author.author_id = docs.author "
+      "join departments on departments.department_id = author.department "
+      f"where {key}={data-value}"))
+  (cur.execute query)
+  (setv tuple-data (cur.fetchall))
+  (setv res [])
+  (print tuple-data)
+  (for [x tuple-data] 
+    ((. res append) 
+     (dict 
+       :doc_id (get x 0)
+       :name (get x 1)
+       :folder (get x 2)
+       :version (get x 3)
+       :fullname (get x 4)
+       :education (get x 5)
+       :univercity (get x 6)
+       :dep_name (get x 7)
+       :location (get x 8)
+       :head (get x 9)
+       :author (get x 10)
+       :phone (get x 11))))
+  res)
+
 (defn get-data-part [#^ str table #^ int page #^ int num]
   (setv con (get-con))
   (setv cur (con.cursor))

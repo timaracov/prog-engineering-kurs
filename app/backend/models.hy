@@ -6,9 +6,9 @@
 
 (defclass SortKey [Enum]
   (setv 
-    by_author "author_id"
-    by_docs "name"
-    by_depart "department_id"))
+    by_author "author"
+    by_docs "docs.name"
+    by_depart "department"))
 
 
 (defclass Document [BaseModel]

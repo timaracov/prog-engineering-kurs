@@ -32,11 +32,13 @@
                 [page (Query 0)] 
                 [num (Query 25)]] 
   (setv tuple-docs 
-    (get-data-by-key
-      "docs" sort-by.value (prep-d sort-key-value) page num))
-  (lfor d tuple-docs
-    (Document.model_validate 
-      (tuple-to-model d Document))))
+    (get-docs-joined-with-key sort-by.value (prep-d sort-key-value)))
+    ; (get-data-by-key
+    ;   "docs" sort-by.value (prep-d sort-key-value) page num))
+  tuple-docs)
+  ;(lfor d tuple-docs
+  ;  (Document.model_validate 
+  ;    (tuple-to-model d Document))))
 
 (defn update_doc [#^ str doc_id 
                   #^ Document data] 
