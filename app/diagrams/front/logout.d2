@@ -1,0 +1,15 @@
+st8: start {
+  style.border-radius: 5
+  width: 150
+}
+en8: end {
+  style.border-radius: 5
+  width: 150
+}
+
+l: ||go
+	document.cookie = "crd=; expires=Thu, 01 Jan 1970 00:00:00 UTC;"
+    red("index.html", "login.html");
+||
+
+st8 -> l -> en8
