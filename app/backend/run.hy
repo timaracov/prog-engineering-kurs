@@ -1,8 +1,8 @@
 (import api [run-api])
-(import db [create-tables])
+(import db [create-tables prepare-db])
 
 (defn main []
-  (create-tables)
+  (prepare-db)
   (run-api))
 
 (cond (= __name__ "__main__") (main))

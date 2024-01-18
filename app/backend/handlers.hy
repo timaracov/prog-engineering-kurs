@@ -11,6 +11,9 @@
     (= (. d isdecimal) True)
       (setv rd (int d)))
   rd)
+
+(defn isdec [chars]
+  (any (lfor char chars ((. char isdigit)))))
 ;------------------------------------------------------------------------------;
 
 ;; DOCS
@@ -18,6 +21,9 @@
   (setv resp 
         (JSONResponse (dict :message "ok") :status_code 201))
   (try
+    (cond (isdec doc.name)
+	  (setv resp
+	    (JSONResponse (dict :message "Name must be a string") :status_code 400)))
     (setattr doc "doc_id" None)
     (add-record doc "docs")
     (except [e Exception]
@@ -38,8 +44,12 @@
 
 (defn update_doc [#^ str doc_id 
                   #^ Document data] 
+  (setv resp (JSONResponse (dict :message "ok")))
+  (cond (isdec doc.name)
+    (setv resp
+	  (JSONResponse (dict :message "Name must be a string") :status_code 400)))
   (update-record data "docs" "doc_id" doc_id)
-  (JSONResponse (dict :message "ok")))
+  resp)
 
 (defn delete_doc [#^ str doc_id]
   (delete-record doc_id "doc_id" "docs")
@@ -52,6 +62,15 @@
   (setv resp 
         (JSONResponse (dict :message "ok") :status_code 201))
   (try
+    (cond (isdec author.fullname)
+	  (setv resp
+	    (JSONResponse (dict :message "Fullname must be a string") :status_code 400)))
+    (cond (isdec author.education)
+	  (setv resp
+	    (JSONResponse (dict :message "Education must be a string") :status_code 400)))
+    (cond (isdec author.university)
+	  (setv resp
+	    (JSONResponse (dict :message "Univercity must be a string") :status_code 400)))
     (setattr author "author_id" None)
     (add-record author "author")
     (except [e IntegrityError]
@@ -71,8 +90,19 @@
 
 (defn update-author [#^ str author_id
                      #^ Author author] 
+  (setv resp 
+        (JSONResponse (dict :message "ok")))
+  (cond (isdec author.fullname)
+    (setv resp
+      (JSONResponse (dict :message "Fullname must be a string") :status_code 400)))
+  (cond (isdec author.education)
+    (setv resp
+      (JSONResponse (dict :message "Education must be a string") :status_code 400)))
+  (cond (isdec author.univercity)
+    (setv resp
+      (JSONResponse (dict :message "Univercity must be a string") :status_code 400)))
   (update-record author "author" "author_id" author_id)
-  (JSONResponse (dict :message "ok")))
+  resp)
  
 (defn delete-author [#^ str author_id]
   (delete-record author_id "author_id" "author")
@@ -85,6 +115,12 @@
   (setv resp 
         (JSONResponse (dict :message "ok") :status_code 201))
   (try
+    (cond (isdec dep.name)
+      (setv resp
+        (JSONResponse (dict :message "Name must be a string") :status_code 400)))
+    (cond (isdec dep.head)
+      (setv resp
+        (JSONResponse (dict :message "Head must be a string") :status_code 400)))
     (setattr dep "department_id" None)
     (add-record dep "departments")
     (except [e IntegrityError]
@@ -101,6 +137,14 @@
  
 (defn update-department [#^ str dep_id
                          #^ Department dep] 
+  (setv resp 
+        (JSONResponse (dict :message "ok")))
+  (cond (isdec dep.name)
+    (setv resp
+      (JSONResponse (dict :message "Name must be a string") :status_code 400)))
+  (cond (isdec dep.head)
+    (setv resp
+      (JSONResponse (dict :message "Head must be a string") :status_code 400)))
   (update-record dep "departments" "department_id" dep_id)
   (JSONResponse (dict :message "ok")))
 
