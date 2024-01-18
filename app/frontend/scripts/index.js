@@ -40,21 +40,23 @@ function sortTable() {
 	const key_el = document.getElementById("om_sort")
 	const by_el = Array.from(document.getElementsByClassName("sort_o"))[0]
 	const url = `http://localhost:8000/api/documents?sort_by=${by_el.value}&sort_key_value=${key_el.value}`;
-	console.log(by_el)
     fetch(url, { method: "GET" })
 	  .then((resp) => {
 		  if (resp.ok) {
 			resp.json().then((d) => {
-			  console.log(d);
 			  displayListOfObjects = d;
 			  recreateTable();
 			});
 		  } else {
-			console.log("bad", resp)
+			  if (resp.detail == null) {
+				alert(`Error:\n${JSON.stringify(resp.message)}`);
+			  } else {
+				alert(`Error:\n${JSON.stringify(resp.detail[0].msg)}`);
+			  }
 		  }
 	  })
 	  .catch((err) => {
-		console.log("really bad", err)
+		alert(err)
 	  });
 }
 
@@ -92,6 +94,10 @@ function redirectToLoginPage() {
   if (u == undefined || p == undefined) {
     red("index.html", "login.html");
   }
+  
+  user_type_el = Array.from(document.getElementsByClassName("user_type"))[0];
+  user_type_el.innerHTML = isUserAdmin == 1 ? `${u}(Admin)` : `${u}(User)`;
+  user_type_el.style.color = "white";
 }
 
 function createAuthorOptionMenu() {
@@ -200,7 +206,6 @@ function createTable(dict_list) {
   if (dictKeys.includes("doc_id")) {
 	  dictKeys = dictKeys.filter((el) => {
 		  if (allowed.includes(el)) {
-			  //console.log(el);
 			  return el
 		  }
 	  })
@@ -208,7 +213,6 @@ function createTable(dict_list) {
 
 
   if (isUserAdmin == 1) {
-	  console.log("wtf", isUserAdmin);
 	  crth_header = document.createElement("th");
 	  crth_header.classList.add("crth");
 	  crth_header.innerHTML = '<input id="cb" data-action="tr_add" class="crud_c" type="button" name="create" value="+">';
@@ -216,15 +220,14 @@ function createTable(dict_list) {
 	  tr_header.appendChild(crth_header);
   }
 
-  //console.log("DL", dict_list, "DK", dictKeys, currentTableName);
-
   table_el.appendChild(tr_header);
 
   const slice_from = Number(currentPaginationPage) * Number(currentPaginationNum);
   const slice_to = slice_from + Number(currentPaginationNum);
 
   dict_list.slice(slice_from, slice_to).forEach((o) => {
-    let row_id = null;
+	// !!!
+    let row_id = 0;
 
     o.doc_id ? (row_id = o.doc_id) : null;
     o.author_id ? (row_id = o.author_id) : null;
@@ -250,6 +253,7 @@ function createTable(dict_list) {
 		const updateButton = ui_th.querySelector('[data-action="tr_update"]');
 		const deleteButton = ui_th.querySelector('[data-action="tr_delete"]');
 
+		console.log(row_id)
 		updateButton.addEventListener("click", (event) => onUpdateClick(row_id, updateButton, event));
 		deleteButton.addEventListener("click", (event) => deleteTableRow(row_id, event));
 
@@ -290,14 +294,14 @@ function addBox(dictKeys, currentTableName) {
 		  selecter = createDepartmentsOptionMenu();
 		  boxContainer.append(selecter);
 	  } else if (el == "author") {
-		  //console.log("addBox", el)
 		  selecter = createAuthorOptionMenu();
 		  boxContainer.append(selecter);
-		  //console.log(boxContainer);
 	  } else {
-		  inputContainer = document.createElement("div");
-		  inputContainer.innerHTML = `<input class="islct_in" type="text" placeholder=${el} name='${el}'>`;
-		  boxContainer.append(inputContainer);
+		  if (!(el.includes("id"))) {
+		    inputContainer = document.createElement("div");
+		    inputContainer.innerHTML = `<input class="islct_in" type="text" placeholder=${el} name='${el}'>`;
+		    boxContainer.append(inputContainer);
+		  }
 	  }
     });
 
@@ -313,10 +317,18 @@ function submitAddRow(currentTableName) {
   const selectInputs = boxContainer.querySelectorAll("select");
   const allAddInputs = boxContainer.querySelectorAll("input[type='text']");
 
+  const idPredefined = {
+	"authors": "author_id",
+	"documents": "doc_id",
+	"departments": "department_id",
+  }
+
   const elements = Array.from(selectInputs).concat(Array.from(allAddInputs))
 
   const data = [];
   let obj = {};
+  let key = idPredefined[currentTableName]
+  obj[key] = 0
 
   elements.forEach((el) => {
 	obj[el.getAttribute("name")] = el.value;
@@ -324,7 +336,6 @@ function submitAddRow(currentTableName) {
   data.push(obj);
 
   const url = `http://localhost:8000/api/${currentTableName}`;
-  //console.log(data);
 
   (async () => {
     const query = await fetch(url, {
@@ -408,11 +419,23 @@ function deleteTableRow(row_id, event) {
   if (row_node.className === "row_tr") {
     const url = `http://localhost:8000/api/${currentTableName}/${row_id}`;
 
-    fetch(url, { method: "DELETE" })
-      .then((resp) => {
-        row_node.remove();
-      })
-      .catch((error) => console.log(error));
+	var to_del = confirm("Are you sured?")
+	
+	if (to_del == true) {
+      fetch(url, { method: "DELETE" })
+        .then((resp) => {
+	  	if (resp.ok) {
+	  	  row_node.remove();
+	  	} else {
+	  	    if (resp.detail == null) {
+	  	      alert(`Error:\n${JSON.stringify(resp.message)}`);
+	  	    } else {
+	  	      alert(`Error:\n${JSON.stringify(resp.detail[0].msg)}`);
+	  	    }
+	  	}
+        })
+        .catch((error) => alert(error));
+	  }
   }
 }
 
@@ -420,39 +443,69 @@ function getDocuments() {
   const url = "http://localhost:8000/api/documents/joined";
   currentTableName = "documents";
 
-  fetch(url, { method: "GET" }).then((resp) => {
-    resp.json().then((d) => {
-      displayListOfObjects = d;
-      recreateTable();
-	  hideSortingOptions("block")
-    });
-  });
+  fetch(url, { method: "GET" }).then(
+	(resp) => {
+	  if (resp.ok) {
+        resp.json().then((d) => {
+          displayListOfObjects = d;
+          recreateTable();
+	      hideSortingOptions("block")
+        });
+	  } else {
+		  if (resp.detail == null) {
+		    alert(`Error:\n${JSON.stringify(resp.message)}`);
+		  } else {
+		    alert(`Error:\n${JSON.stringify(resp.detail[0].msg)}`);
+		  }
+	  }
+  })
+  .catch((err) => {alert(err)})
 }
 
 function getAuthors() {
   const url = "http://localhost:8000/api/authors";
   currentTableName = "authors";
 
-  fetch(url, { method: "GET" }).then((resp) => {
-    resp.json().then((d) => {
-      displayListOfObjects = d;
-      recreateTable();
-	  hideSortingOptions("none")
-    });
-  });
+  fetch(url, { method: "GET" }).then(
+	(resp) => {
+	  if (resp.ok) {
+        resp.json().then((d) => {
+          displayListOfObjects = d;
+          recreateTable();
+	      hideSortingOptions("none")
+        });
+	  } else {
+		  if (resp.detail == null) {
+		    alert(`Error:\n${JSON.stringify(resp.message)}`);
+		  } else {
+		    alert(`Error:\n${JSON.stringify(resp.detail[0].msg)}`);
+		  }
+	  }
+	})
+	.catch((err) => {alert(err)})
 }
 
 function getDepartments() {
   const url = "http://localhost:8000/api/departments";
   currentTableName = "departments";
 
-  fetch(url, { method: "GET" }).then((resp) => {
-    resp.json().then((d) => {
-      displayListOfObjects = d;
-      recreateTable();
-	  hideSortingOptions("none")
-    });
-  });
+  fetch(url, { method: "GET" }).then(
+	(resp) => {
+	  if (resp.ok) {
+		resp.json().then((d) => {
+		  displayListOfObjects = d;
+		  recreateTable();
+		  hideSortingOptions("none")
+		});
+	  } else {
+		  if (resp.detail == null) {
+			alert(`Error:\n${JSON.stringify(resp.message)}`);
+		  } else {
+			alert(`Error:\n${JSON.stringify(resp.detail[0].msg)}`);
+		  }
+	  }
+  })
+  .catch((err) => {alert(err)})
 }
 
 function hideSortingOptions(hide) {

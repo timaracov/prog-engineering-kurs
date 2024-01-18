@@ -18,8 +18,9 @@
   (setv resp 
         (JSONResponse (dict :message "ok") :status_code 201))
   (try
+    (setattr doc "doc_id" None)
     (add-record doc "docs")
-    (except [e IntegrityError]
+    (except [e Exception]
       (setv resp 
             (JSONResponse (dict :message (str e)) :status_code 400))))
   resp)
@@ -33,12 +34,7 @@
                 [num (Query 25)]] 
   (setv tuple-docs 
     (get-docs-joined-with-key sort-by.value (prep-d sort-key-value)))
-    ; (get-data-by-key
-    ;   "docs" sort-by.value (prep-d sort-key-value) page num))
   tuple-docs)
-  ;(lfor d tuple-docs
-  ;  (Document.model_validate 
-  ;    (tuple-to-model d Document))))
 
 (defn update_doc [#^ str doc_id 
                   #^ Document data] 
@@ -56,10 +52,11 @@
   (setv resp 
         (JSONResponse (dict :message "ok") :status_code 201))
   (try
+    (setattr author "author_id" None)
     (add-record author "author")
     (except [e IntegrityError]
       (setv resp 
-            (JSONResponse (dict :message (str e)) :status_code 400))))
+        (JSONResponse (dict :message (str e)) :status_code 400))))
   resp)
 
 (defn get-author-all [] 
@@ -88,6 +85,7 @@
   (setv resp 
         (JSONResponse (dict :message "ok") :status_code 201))
   (try
+    (setattr dep "department_id" None)
     (add-record dep "departments")
     (except [e IntegrityError]
       (setv resp 

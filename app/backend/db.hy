@@ -178,6 +178,7 @@
              (str el)
              f"'{el}'")))
     ")"))
+  (setv query ((. query replace) "'None'" "null"))
   (cur.execute query)
   (con.commit))
 
@@ -202,6 +203,8 @@
     f"update {table} set " 
     (cut rstr 0 -2)
     f" where {record_key} = {record_id}"))
+  (setv query ((. query replace) "'None'" "null"))
+  (print query)
   (cur.execute query)
   (con.commit))
 
